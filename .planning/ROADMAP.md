@@ -6,7 +6,7 @@ Build an end-to-end autonomous parking negotiation and physical gate control sys
 
 ## Phases
 
-- [ ] **Phase 1: Foundation, Policy Guardrails & Invariant Fuzzing** - Strict schemas, SQLite integer paise store, PolicyGuard clamps, prose sanitizer, and 50-run adversarial fuzz test.
+- [x] **Phase 1: Foundation, Policy Guardrails & Invariant Fuzzing** - Strict schemas, SQLite integer paise store, PolicyGuard clamps, prose sanitizer, and 50-run adversarial fuzz test.
 - [ ] **Phase 2: Dual-Model LLM Client & Multi-Lot Orchestrator** - Dual-bucket Gemini routing, concurrency semaphore, concession fallback, 3-round state machine, and soft-locking.
 - [ ] **Phase 3: PayPal Sandbox & Cryptographic HMAC QR Passes** - Zero-LLM currency boundary, PayPal v2 orders, and tamper-proof HMAC-SHA256 signed QR pass lifecycle.
 - [ ] **Phase 4: FastAPI WebSocket Hub, Vision Gate & ESP32 Twin** - Real-time WebSocket broadcasting, OpenCV QR detector, USB serial bridge, and ESP32 gate/IR firmware.
@@ -26,9 +26,9 @@ Build an end-to-end autonomous parking negotiation and physical gate control sys
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Environment configuration, dependencies, Pydantic schemas, and SQLite database in integer paise.
-- [ ] 01-02: Pricing engine and anti-hallucination PolicyGuard (floor/budget clamp, monotonicity clamp, regex prose sanitizer).
-- [ ] 01-03: 50-run adversarial chaos fuzz testing suite verifying all 7 invariants.
+- [x] 01-01: Environment configuration, dependencies, Pydantic schemas, and SQLite database in integer paise.
+- [x] 01-02: Pricing engine and anti-hallucination PolicyGuard (floor/budget clamp, monotonicity clamp, regex prose sanitizer).
+- [x] 01-03: 50-run adversarial chaos fuzz testing suite verifying all 7 invariants.
 
 ### Phase 2: Dual-Model LLM Client & Multi-Lot Orchestrator
 **Goal**: Build rate-limit-safe dual-model Gemini client with concurrency semaphore, deterministic concession fallback engine, memory-isolated prompts, and 3-round multi-lot negotiation state machine with atomic slot soft-locking and utility-based winner selection.
@@ -102,7 +102,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation, Policy Guardrails & Invariant Fuzzing | 0/3 | Not started | - |
+| 1. Foundation, Policy Guardrails & Invariant Fuzzing | 3/3 | Complete | 2026-10-15 |
 | 2. Dual-Model LLM Client & Multi-Lot Orchestrator | 0/3 | Not started | - |
 | 3. PayPal Sandbox & Cryptographic HMAC QR Passes | 0/2 | Not started | - |
 | 4. FastAPI WebSocket Hub, Vision Gate & ESP32 Twin | 0/3 | Not started | - |
