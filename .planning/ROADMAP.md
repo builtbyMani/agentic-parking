@@ -7,7 +7,7 @@ Build an end-to-end autonomous parking negotiation and physical gate control sys
 ## Phases
 
 - [x] **Phase 1: Foundation, Policy Guardrails & Invariant Fuzzing** - Strict schemas, SQLite integer paise store, PolicyGuard clamps, prose sanitizer, and 50-run adversarial fuzz test.
-- [ ] **Phase 2: Dual-Model LLM Client & Multi-Lot Orchestrator** - Dual-bucket Gemini routing, concurrency semaphore, concession fallback, 3-round state machine, and soft-locking.
+- [x] **Phase 2: Dual-Model LLM Client & Multi-Lot Orchestrator** - Dual-bucket Gemini routing, concurrency semaphore, concession fallback, 3-round state machine, and soft-locking.
 - [ ] **Phase 3: PayPal Sandbox & Cryptographic HMAC QR Passes** - Zero-LLM currency boundary, PayPal v2 orders, and tamper-proof HMAC-SHA256 signed QR pass lifecycle.
 - [ ] **Phase 4: FastAPI WebSocket Hub, Vision Gate & ESP32 Twin** - Real-time WebSocket broadcasting, OpenCV QR detector, USB serial bridge, and ESP32 gate/IR firmware.
 - [ ] **Phase 5: React Frontend Paced Theater & AG Grid Dashboard** - Vite React-TS frontend, 1200ms pacing queue, live negotiation theater, offer ladder chart, and cell-flashing dashboard.
@@ -43,9 +43,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Dual-model Gemini client with semaphore and deterministic concession fallback engine.
-- [ ] 02-02: Multi-lot 3-round bilateral state machine with distance pre-filter, slot soft-lock, and winner scoring.
-- [ ] 02-03: Live Gemini smoke test runs and golden_runs.json offline replay capture.
+- [x] 02-01: Dual-model Gemini client with semaphore and deterministic concession fallback engine.
+- [x] 02-02: Multi-lot 3-round bilateral state machine with distance pre-filter, slot soft-lock, and winner scoring.
+- [x] 02-03: Live Gemini smoke test runs and golden_runs.json offline replay capture.
 
 ### Phase 3: PayPal Sandbox & Cryptographic HMAC QR Passes
 **Goal**: Implement zero-LLM payment boundary converting integer paise to USD cents, PayPal Sandbox v2 checkout order creation, and tamper-proof HMAC-SHA256 signed QR access pass generator and cryptographic verifier.
@@ -103,7 +103,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation, Policy Guardrails & Invariant Fuzzing | 3/3 | Complete | 2026-10-15 |
-| 2. Dual-Model LLM Client & Multi-Lot Orchestrator | 0/3 | Not started | - |
+| 2. Dual-Model LLM Client & Multi-Lot Orchestrator | 3/3 | Complete | 2026-10-15 |
 | 3. PayPal Sandbox & Cryptographic HMAC QR Passes | 0/2 | Not started | - |
 | 4. FastAPI WebSocket Hub, Vision Gate & ESP32 Twin | 0/3 | Not started | - |
 | 5. React Frontend Paced Theater & AG Grid Dashboard | 0/3 | Not started | - |
