@@ -10,7 +10,7 @@ Build an end-to-end autonomous parking negotiation and physical gate control sys
 - [x] **Phase 2: Dual-Model LLM Client & Multi-Lot Orchestrator** - Dual-bucket Gemini routing, concurrency semaphore, concession fallback, 3-round state machine, and soft-locking.
 - [x] **Phase 3: PayPal Sandbox & Cryptographic HMAC QR Passes** - Zero-LLM currency boundary, PayPal v2 orders, and tamper-proof HMAC-SHA256 signed QR pass lifecycle.
 - [x] **Phase 4: FastAPI WebSocket Hub, Vision Gate & ESP32 Twin** - Real-time WebSocket broadcasting, OpenCV QR detector, USB serial bridge, and ESP32 gate/IR firmware.
-- [ ] **Phase 5: React Frontend Paced Theater & AG Grid Dashboard** - Vite React-TS frontend, 1200ms pacing queue, live negotiation theater, offer ladder chart, and cell-flashing dashboard.
+- [x] **Phase 5: React Frontend Paced Theater & AG Grid Dashboard** - Vite React-TS frontend, 1200ms pacing queue, live negotiation theater, offer ladder chart, and cell-flashing dashboard.
 
 ## Phase Details
 
@@ -91,9 +91,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: Vite React TypeScript project setup, styling, and usePacedStream pacing hook.
-- [ ] 05-02: Negotiation Theater component and OfferLadderChart Recharts visualization.
-- [ ] 05-03: AG Grid Community live flashing dashboard and offline golden_runs replay controller.
+- [x] 05-01: Vite React TypeScript project setup, styling, and usePacedStream pacing hook.
+- [x] 05-02: Negotiation Theater component and OfferLadderChart Recharts visualization.
+- [x] 05-03: AG Grid Community live flashing dashboard and offline golden_runs replay controller.
 
 ## Progress
 

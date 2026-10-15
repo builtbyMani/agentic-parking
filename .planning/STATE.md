@@ -1,12 +1,12 @@
 ---
 gsd_state_version: '1.0'
-status: ready_to_plan
+status: completed
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 14
-  completed_plans: 11
-  percent: 79
+  completed_plans: 14
+  percent: 100
 ---
 
 # Project State
@@ -16,23 +16,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-15)
 
 **Core value:** Zero-hallucination, deterministic bilateral price negotiation and automated physical access control: LLMs generate conversational bidding strategy while pure mathematical guards and deterministic barriers strictly clamp prices, enforce monotonic convergence, sanitize contradictory prose, and control all financial and physical access primitives.
-**Current focus:** Phase 5: React Frontend Paced Theater & AG Grid Dashboard
+**Current focus:** All Phases Complete (Project Ready for Live & Offline Demonstration)
 
 ## Current Position
 
-Phase: 5 of 5 (React Frontend Paced Theater & AG Grid Dashboard)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-10-15 — Phase 4 executed and verified (11/11 plans complete across Phases 1, 2, 3, and 4).
+Phase: 5 of 5 (Complete)
+Plan: 3 of 3 in current phase
+Status: Milestone Completed
+Last activity: 2026-10-15 — Phase 5 executed, bundled, and verified (14/14 plans complete across all 5 phases).
 
-Progress: [████████░░] 79%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 14
 - Average duration: ~1 min
-- Total execution time: ~0.35 hours
+- Total execution time: ~0.45 hours
 
 **By Phase:**
 
@@ -42,11 +42,11 @@ Progress: [████████░░] 79%
 | 2. LLM Engine & Orchestrator | 3/3 | 3 | ~1m |
 | 3. Payments & QR Passes | 2/2 | 2 | ~1m |
 | 4. Backend Hub & Hardware Twin | 3/3 | 3 | ~1m |
-| 5. Frontend Theater & Dashboard | 0/3 | - | - |
+| 5. Frontend Theater & Dashboard | 3/3 | 3 | ~1m |
 
 **Recent Trend:**
-- Last 3 plans: 04-01, 04-02, 04-03
-- Trend: Stable & fast (13/13 tests passing across entire repo)
+- Last 3 plans: 05-01, 05-02, 05-03
+- Trend: Stable & fast (100% build & test pass across stack)
 
 ## Accumulated Context
 
@@ -56,7 +56,7 @@ Progress: [████████░░] 79%
 - [Phase 1]: PolicyGuard strictly clamps lot offers to effective floor and monotonicity ceiling; clamps driver bids to budget and prevents upward bidding.
 - [Phase 1]: Regex prose sanitizer replaces any mismatched numbers in message text with clamped value.
 - [Phase 1]: SQLite store supports atomic slot soft-locking (`acquire_soft_lock`).
-- [Phase 2]: Driver queries `gemini-2.5-flash` while Lot queries `gemini-2.5-flash-lite` under an `asyncio.Semaphore(2)` concurrency limit.
+- [Phase 2]: Driver queries `gemini-3.8-flash` while Lot queries `gemini-3.5-flash-lite` under an `asyncio.Semaphore(2)` concurrency limit.
 - [Phase 2]: Lazy Google GenAI client loading enables instantaneous offline and test execution.
 - [Phase 2]: Multi-lot orchestrator deterministically pre-filters by walking distance, computes opening anchors, runs parallel bilateral rounds via `asyncio.gather`, scores utility factoring in distance penalty, and atomically soft-locks the winning slot.
 - [Phase 2]: Offline golden runs trace recorded with 22 events in `frontend/public/golden_runs.json`.
@@ -67,6 +67,12 @@ Progress: [████████░░] 79%
 - [Phase 4]: SerialBridge operates bidirectionally at 115200 baud with seamless fallback to virtual twin when port is disconnected.
 - [Phase 4]: OpenCV QRCodeDetector validates signed passes and enforces 5.0s actuation cooldown window.
 - [Phase 4]: ESP32 firmware controls SG90 servo with 5s auto-close window and reads debounced active-LOW IR sensor.
+- [Phase 5]: usePacedStream buffers WebSocket bursts in an in-memory queue and releases 1 event every 1200ms so human viewers can comfortably follow rapid bidding rounds.
+- [Phase 5]: Offline replay mode reads golden_runs.json to guarantee 100% demo resilience when Wi-Fi is unavailable.
+- [Phase 5]: NegotiationTheater renders prominent amber warning badges for policy-clamped offers with reason and raw vs clamped prices.
+- [Phase 5]: OfferLadderChart plots real-time price convergence trajectories using Recharts.
+- [Phase 5]: AgGridDashboard uses ag-grid-community with enableCellChangeFlash to highlight sensor changes without Enterprise licensing.
+- [Phase 5]: QRPassModal provides instant PayPal Sandbox link, simulated confirmation, cryptographic HMAC QR code display, and direct vision gate test actuator.
 
 ### Pending Todos
 

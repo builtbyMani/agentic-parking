@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 font-sans antialiased;
+  }
+}
+
+/* Custom Scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* AG Grid Dark Theme Quartz adjustments */
+.ag-theme-quartz-dark {
+  --ag-background-color: #0b1120;
+  --ag-header-background-color: #0f172a;
+  --ag-odd-row-background-color: #0d1527;
+  --ag-border-color: #1e293b;
+  --ag-row-hover-color: #1e293b80;
+  --ag-data-color: #f1f5f9;
+  --ag-header-foreground-color: #94a3b8;
+  --ag-font-family: inherit;
+  --ag-font-size: 12px;
+}

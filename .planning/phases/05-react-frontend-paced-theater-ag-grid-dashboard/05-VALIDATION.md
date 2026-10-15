@@ -37,13 +37,13 @@ created: "2026-10-15"
 ## Per-Task Verification Map
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
-|---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 05-01-01 | 01 | 1 | FE-01 | T-05-01 | React Vite & AG Grid Community dependencies | install | `cd frontend && npm list ag-grid-community` | ❌ W0 | ⬜ pending |
-| 05-01-02 | 01 | 1 | FE-02 | T-05-02 | usePacedStream pacing queue & replay loader | unit | `cd frontend && npx tsc --noEmit` | ❌ W0 | ⬜ pending |
-| 05-02-01 | 02 | 2 | FE-03 | T-05-03 | NegotiationTheater amber clamps & winner card | visual | `cd frontend && npx tsc --noEmit` | ❌ W0 | ⬜ pending |
-| 05-02-02 | 02 | 2 | FE-04 | T-05-04 | OfferLadderChart & QR pass modal | visual | `cd frontend && npx tsc --noEmit` | ❌ W0 | ⬜ pending |
-| 05-03-01 | 03 | 3 | FE-05 | T-05-05 | AgGridDashboard Community with cell flashing | visual | `cd frontend && npx tsc --noEmit` | ❌ W0 | ⬜ pending |
-| 05-03-02 | 03 | 3 | FE-01..05 | T-05-06 | Full Vite production bundle verification | build | `cd frontend && npm run build` | ❌ W0 | ⬜ pending |
+|---|---|---|---|---|---|---|---|---|---|
+| 05-01-01 | 01 | 1 | FE-01 | T-05-01 | React Vite & AG Grid Community dependencies | install | `cd frontend && npm list ag-grid-community` | ✅ yes | ✅ green |
+| 05-01-02 | 01 | 1 | FE-02 | T-05-02 | usePacedStream pacing queue & replay loader | unit | `cd frontend && npx tsc --noEmit` | ✅ yes | ✅ green |
+| 05-02-01 | 02 | 2 | FE-03 | T-05-03 | NegotiationTheater amber clamps & winner card | visual | `cd frontend && npx tsc --noEmit` | ✅ yes | ✅ green |
+| 05-02-02 | 02 | 2 | FE-04 | T-05-04 | OfferLadderChart & QR pass modal | visual | `cd frontend && npx tsc --noEmit` | ✅ yes | ✅ green |
+| 05-03-01 | 03 | 3 | FE-05 | T-05-05 | AgGridDashboard Community with cell flashing | visual | `cd frontend && npx tsc --noEmit` | ✅ yes | ✅ green |
+| 05-03-02 | 03 | 3 | FE-01..05 | T-05-06 | Full Vite production bundle verification | build | `cd frontend && npm run build` | ✅ yes | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
