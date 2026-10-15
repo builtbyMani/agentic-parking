@@ -3,10 +3,10 @@ gsd_state_version: '1.0'
 status: ready_to_plan
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 14
-  completed_plans: 6
-  percent: 43
+  completed_plans: 8
+  percent: 57
 ---
 
 # Project State
@@ -16,37 +16,37 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-15)
 
 **Core value:** Zero-hallucination, deterministic bilateral price negotiation and automated physical access control: LLMs generate conversational bidding strategy while pure mathematical guards and deterministic barriers strictly clamp prices, enforce monotonic convergence, sanitize contradictory prose, and control all financial and physical access primitives.
-**Current focus:** Phase 3: PayPal Sandbox & Cryptographic HMAC QR Passes
+**Current focus:** Phase 4: FastAPI WebSocket Hub, Vision Gate & ESP32 Twin
 
 ## Current Position
 
-Phase: 3 of 5 (PayPal Sandbox & Cryptographic HMAC QR Passes)
-Plan: 0 of 2 in current phase
+Phase: 4 of 5 (FastAPI WebSocket Hub, Vision Gate & ESP32 Twin)
+Plan: 0 of 3 in current phase
 Status: Ready to plan
-Last activity: 2026-10-15 — Phase 2 executed and verified (6/6 plans complete across Phase 1 & 2).
+Last activity: 2026-10-15 — Phase 3 executed and verified (8/8 plans complete across Phases 1, 2, and 3).
 
-Progress: [████░░░░░░] 43%
+Progress: [██████░░░░] 57%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 8
 - Average duration: ~1 min
-- Total execution time: ~0.2 hours
+- Total execution time: ~0.25 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
+|---|---|---|---|
 | 1. Foundation & Guardrails | 3/3 | 3 | ~1m |
 | 2. LLM Engine & Orchestrator | 3/3 | 3 | ~1m |
-| 3. Payments & QR Passes | 0/2 | - | - |
+| 3. Payments & QR Passes | 2/2 | 2 | ~1m |
 | 4. Backend Hub & Hardware Twin | 0/3 | - | - |
 | 5. Frontend Theater & Dashboard | 0/3 | - | - |
 
 **Recent Trend:**
-- Last 3 plans: 02-01, 02-02, 02-03
-- Trend: Stable & fast (all tests passing under 1.5s)
+- Last 3 plans: 02-03, 03-01, 03-02
+- Trend: Stable & fast (8/8 tests passing in 1.79s)
 
 ## Accumulated Context
 
@@ -60,6 +60,9 @@ Progress: [████░░░░░░] 43%
 - [Phase 2]: Lazy Google GenAI client loading enables instantaneous offline and test execution.
 - [Phase 2]: Multi-lot orchestrator deterministically pre-filters by walking distance, computes opening anchors, runs parallel bilateral rounds via `asyncio.gather`, scores utility factoring in distance penalty, and atomically soft-locks the winning slot.
 - [Phase 2]: Offline golden runs trace recorded with 22 events in `frontend/public/golden_runs.json`.
+- [Phase 3]: Zero-LLM payment boundary converts integer paise to USD cents using Python arithmetic (`round(total_paise * 100 / USD_TO_INR_PAISE)`).
+- [Phase 3]: PayPalSandboxProvider supports OAuth2 order creation and capture; MockPaymentProvider provides instantaneous offline simulation.
+- [Phase 3]: QR pass format uses URL-safe base64 compact JSON `{bid, lot, slot, ph, exp}` signed with 16-hex HMAC-SHA256 and timing-safe compare digest.
 
 ### Pending Todos
 

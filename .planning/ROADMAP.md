@@ -8,7 +8,7 @@ Build an end-to-end autonomous parking negotiation and physical gate control sys
 
 - [x] **Phase 1: Foundation, Policy Guardrails & Invariant Fuzzing** - Strict schemas, SQLite integer paise store, PolicyGuard clamps, prose sanitizer, and 50-run adversarial fuzz test.
 - [x] **Phase 2: Dual-Model LLM Client & Multi-Lot Orchestrator** - Dual-bucket Gemini routing, concurrency semaphore, concession fallback, 3-round state machine, and soft-locking.
-- [ ] **Phase 3: PayPal Sandbox & Cryptographic HMAC QR Passes** - Zero-LLM currency boundary, PayPal v2 orders, and tamper-proof HMAC-SHA256 signed QR pass lifecycle.
+- [x] **Phase 3: PayPal Sandbox & Cryptographic HMAC QR Passes** - Zero-LLM currency boundary, PayPal v2 orders, and tamper-proof HMAC-SHA256 signed QR pass lifecycle.
 - [ ] **Phase 4: FastAPI WebSocket Hub, Vision Gate & ESP32 Twin** - Real-time WebSocket broadcasting, OpenCV QR detector, USB serial bridge, and ESP32 gate/IR firmware.
 - [ ] **Phase 5: React Frontend Paced Theater & AG Grid Dashboard** - Vite React-TS frontend, 1200ms pacing queue, live negotiation theater, offer ladder chart, and cell-flashing dashboard.
 
@@ -59,8 +59,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Deterministic paise-to-USD conversion and PayPal Sandbox v2 checkout order provider.
-- [ ] 03-02: Cryptographic HMAC-SHA256 signed QR pass generator and token verifier.
+- [x] 03-01: Deterministic paise-to-USD conversion and PayPal Sandbox v2 checkout order provider.
+- [x] 03-02: Cryptographic HMAC-SHA256 signed QR pass generator and token verifier.
 
 ### Phase 4: FastAPI WebSocket Hub, Vision Gate & ESP32 Twin
 **Goal**: Construct FastAPI web application with real-time WebSocket hub, OpenCV webcam QR scanner with HMAC verification, USB serial bridge, and ESP32 Arduino firmware for physical SG90 servo gate and IR obstacle slot sensors.

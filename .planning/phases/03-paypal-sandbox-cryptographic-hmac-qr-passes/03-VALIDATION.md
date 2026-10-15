@@ -37,12 +37,12 @@ created: "2026-10-15"
 ## Per-Task Verification Map
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
-|---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 03-01-01 | 01 | 1 | PAY-01 | T-03-01 | Integer paise converts to USD cents | unit | `python3 -c "from backend.payments import paise_to_usd_cents; assert paise_to_usd_cents(11400) == 136"` | ❌ W0 | ⬜ pending |
-| 03-01-02 | 01 | 1 | PAY-02 | T-03-02 | Payment provider handles checkout orders | unit | `python3 -c "from backend.payments import get_payment_provider"` | ❌ W0 | ⬜ pending |
-| 03-01-03 | 01 | 1 | PAY-03 | T-03-03 | Generates URL-safe HMAC-SHA256 signed QR pass | unit | `python3 -c "from backend.payments import generate_signed_qr_token"` | ❌ W0 | ⬜ pending |
-| 03-01-04 | 01 | 1 | PAY-04 | T-03-04 | Cryptographic verification rejects invalid passes | unit | `python3 -c "from backend.payments import verify_signed_qr_token"` | ❌ W0 | ⬜ pending |
-| 03-02-01 | 02 | 2 | PAY-01..04 | T-03-05 | Full automated test suite for payments & QR | integration | `python3 -m pytest backend/tests/test_payments.py -v` | ❌ W0 | ⬜ pending |
+|---|---|---|---|---|---|---|---|---|---|
+| 03-01-01 | 01 | 1 | PAY-01 | T-03-01 | Integer paise converts to USD cents | unit | `python3 -c "from backend.payments import paise_to_usd_cents; assert paise_to_usd_cents(11400) == 136"` | ✅ yes | ✅ green |
+| 03-01-02 | 01 | 1 | PAY-02 | T-03-02 | Payment provider handles checkout orders | unit | `python3 -c "from backend.payments import get_payment_provider"` | ✅ yes | ✅ green |
+| 03-01-03 | 01 | 1 | PAY-03 | T-03-03 | Generates URL-safe HMAC-SHA256 signed QR pass | unit | `python3 -c "from backend.payments import generate_signed_qr_token"` | ✅ yes | ✅ green |
+| 03-01-04 | 01 | 1 | PAY-04 | T-03-04 | Cryptographic verification rejects invalid passes | unit | `python3 -c "from backend.payments import verify_signed_qr_token"` | ✅ yes | ✅ green |
+| 03-02-01 | 02 | 2 | PAY-01..04 | T-03-05 | Full automated test suite for payments & QR | integration | `python3 -m pytest backend/tests/test_payments.py -v` | ✅ yes | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
