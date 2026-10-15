@@ -37,12 +37,12 @@ created: "2026-10-15"
 ## Per-Task Verification Map
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
-|---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 04-01-01 | 01 | 1 | HW-01 | T-04-01 | FastAPI app & WebSocket hub initialize | integration | `python3 -c "from backend.main import app; from fastapi.testclient import TestClient; c = TestClient(app); assert c.get('/').status_code == 200"` | ❌ W0 | ⬜ pending |
-| 04-02-01 | 02 | 2 | HW-03 | T-04-02 | Serial bridge / virtual twin manages gate state | unit | `python3 -c "import asyncio; from backend.serial_bridge import bridge; asyncio.run(bridge.trigger_gate_open(0.05))"` | ❌ W0 | ⬜ pending |
-| 04-02-02 | 02 | 2 | HW-02 | T-04-03 | OpenCV QR scanner verifies authentic passes | unit | `python3 -c "from backend.vision_gate import vision_scanner"` | ❌ W0 | ⬜ pending |
-| 04-03-01 | 03 | 3 | HW-03 | T-04-04 | ESP32 Arduino firmware syntax & tokens | syntax | `grep -q 'GATE:OPEN' hardware/esp32_lot_a/esp32_lot_a.ino` | ❌ W0 | ⬜ pending |
-| 04-03-02 | 03 | 3 | HW-01..03 | T-04-05 | Full gate flow and slot telemetry test suite | integration | `python3 -m pytest backend/tests/test_gate_flow.py -v` | ❌ W0 | ⬜ pending |
+|---|---|---|---|---|---|---|---|---|---|
+| 04-01-01 | 01 | 1 | HW-01 | T-04-01 | FastAPI app & WebSocket hub initialize | integration | `python3 -c "from backend.main import app; from fastapi.testclient import TestClient; c = TestClient(app); assert c.get('/').status_code == 200"` | ✅ yes | ✅ green |
+| 04-02-01 | 02 | 2 | HW-03 | T-04-02 | Serial bridge / virtual twin manages gate state | unit | `python3 -c "import asyncio; from backend.serial_bridge import bridge; asyncio.run(bridge.trigger_gate_open(0.05))"` | ✅ yes | ✅ green |
+| 04-02-02 | 02 | 2 | HW-02 | T-04-03 | OpenCV QR scanner verifies authentic passes | unit | `python3 -c "from backend.vision_gate import vision_scanner"` | ✅ yes | ✅ green |
+| 04-03-01 | 03 | 3 | HW-03 | T-04-04 | ESP32 Arduino firmware syntax & tokens | syntax | `grep -q 'GATE:OPEN' hardware/esp32_lot_a/esp32_lot_a.ino` | ✅ yes | ✅ green |
+| 04-03-02 | 03 | 3 | HW-01..03 | T-04-05 | Full gate flow and slot telemetry test suite | integration | `python3 -m pytest backend/tests/test_gate_flow.py -v` | ✅ yes | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
