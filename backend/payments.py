@@ -2,9 +2,10 @@ import base64
 import hashlib
 import hmac
 import json
+import os
 import time
 import uuid
-from typing import Any, Dict, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 import httpx
 
@@ -139,12 +140,17 @@ class MockPaymentProvider:
         }
 
 
-def get_payment_provider() -> Union[PayPalSandboxProvider, MockPaymentProvider]:
+def get_payment_provider(
+    mode: Optional[str] = None,
+) -> Union[PayPalSandboxProvider, MockPaymentProvider]:
+    active_mode = mode or os.environ.get("PAYMENT_MODE", PAYMENT_MODE)
+    client_id = os.environ.get("PAYPAL_CLIENT_ID", PAYPAL_CLIENT_ID)
+    client_secret = os.environ.get("PAYPAL_CLIENT_SECRET", PAYPAL_CLIENT_SECRET)
     if (
-        PAYMENT_MODE == "mock"
-        or not PAYPAL_CLIENT_ID
-        or PAYPAL_CLIENT_ID == "dummy_sandbox_client_id"
-        or not PAYPAL_CLIENT_SECRET
+        active_mode == "mock"
+        or not client_id
+        or client_id == "dummy_sandbox_client_id"
+        or not client_secret
     ):
         return MockPaymentProvider()
     return PayPalSandboxProvider()

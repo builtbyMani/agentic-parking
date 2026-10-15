@@ -120,7 +120,7 @@ async def call_agent_llm(
     - Semaphore(2) limits concurrent active requests
     - Gracefully falls back to deterministic mathematical concession upon error
     """
-    model_id = "gemini-2.5-flash" if role == "driver" else "gemini-2.5-flash-lite"
+    model_id = "gemini-3.8-flash" if role == "driver" else "gemini-3.5-flash-lite"
     start_t = time.perf_counter()
 
     current_mode = os.environ.get("LLM_MODE", LLM_MODE)
@@ -163,3 +163,6 @@ async def call_agent_llm(
                     latency_ms = int((time.perf_counter() - start_t) * 1000)
                     move, model_name = deterministic_fallback_move(*fallback_args)
                     return move, model_name, latency_ms
+
+# Alias for convenience
+call_agent = call_agent_llm

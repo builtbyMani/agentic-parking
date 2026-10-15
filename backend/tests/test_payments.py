@@ -30,7 +30,7 @@ def test_currency_conversion():
 
 @pytest.mark.asyncio
 async def test_mock_payment_provider():
-    provider = get_payment_provider()
+    provider = get_payment_provider(mode="mock")
     assert isinstance(provider, MockPaymentProvider)
 
     # Order creation
@@ -46,6 +46,19 @@ async def test_mock_payment_provider():
     capture = await provider.capture_order(order["order_id"])
     assert capture["status"] == "COMPLETED"
     assert capture["order_id"] == order["order_id"]
+
+
+@pytest.mark.asyncio
+async def test_live_paypal_sandbox_provider_if_configured():
+    provider = get_payment_provider()
+    # If the user has configured live sandbox credentials in .env, test live order creation
+    if isinstance(provider, MockPaymentProvider):
+        return
+    order = await provider.create_order("bk_live_test", 11400)
+    assert order["provider"] == "PAYPAL_SANDBOX"
+    assert order["usd_cents"] == 136
+    assert order["approve_url"] is not None
+    assert "sandbox.paypal.com" in order["approve_url"]
 
 
 def test_hmac_qr_lifecycle():
