@@ -21,6 +21,7 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
   const [qrToken, setQrToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [gateFeedback, setGateFeedback] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const apiBase = typeof window !== 'undefined' && window.location.port === '5173' ? '' : 'http://localhost:8000';
 
@@ -29,6 +30,7 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
     if (isOpen && winner) {
       setQrToken(null);
       setGateFeedback(null);
+      setErrorMessage(null);
       setLoading(true);
       fetch(`${apiBase}/api/bookings/${winner.booking_id}/checkout`, {
         method: 'POST',
@@ -45,24 +47,56 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
     }
   }, [isOpen, winner, apiBase]);
 
+  // Auto-detect approval if completed in PayPal browser tab
+  useEffect(() => {
+    if (!isOpen || !winner || qrToken) return;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${apiBase}/api/slots`);
+        const slots = await res.json();
+        const slot = slots.find((s: any) => s.slot_id === winner.slot_id);
+        if (slot && slot.booking_status === 'CONFIRMED') {
+          const confRes = await fetch(`${apiBase}/api/bookings/${winner.booking_id}/confirm`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: checkoutData?.order_id }),
+          });
+          const confData = await confRes.json();
+          if (confData.qr_token) {
+            setQrToken(confData.qr_token);
+            setErrorMessage(null);
+          }
+        }
+      } catch (e) {
+        // Silently continue
+      }
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [isOpen, winner, qrToken, apiBase, checkoutData]);
+
   if (!isOpen || !winner) return null;
 
   // Confirm booking & retrieve signed HMAC QR pass
   const handleConfirmPayment = async () => {
     try {
       setLoading(true);
+      setErrorMessage(null);
       const res = await fetch(`${apiBase}/api/bookings/${winner.booking_id}/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ order_id: checkoutData?.order_id || 'DEMO_ORDER' }),
+        body: JSON.stringify({ order_id: checkoutData?.order_id }),
       });
       const data = await res.json();
-      if (data.qr_token) {
+      if (res.ok && data.qr_token) {
         setQrToken(data.qr_token);
+        setErrorMessage(null);
+      } else {
+        setErrorMessage(data.detail || 'Payment capture failed. Complete PayPal approval first.');
       }
       setLoading(false);
     } catch (err) {
       console.error('Confirm error:', err);
+      setErrorMessage('Failed to connect to confirmation API');
       setLoading(false);
     }
   };
@@ -172,6 +206,13 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
                   <Sparkles className="w-4 h-4" />
                   <span>Confirm Payment & Issue Signed QR Pass</span>
                 </button>
+
+                {errorMessage && (
+                  <div className="bg-rose-950/70 border border-rose-700 text-rose-200 text-xs p-3 rounded-lg flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
               </div>
             )}
           </div>

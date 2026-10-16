@@ -67,8 +67,8 @@ class PayPalSandboxProvider:
                 "brand_name": "Agentic Parking Gate",
                 "landing_page": "NO_PREFERENCE",
                 "user_action": "PAY_NOW",
-                "return_url": f"{BACKEND_URL}/api/paypal-return",
-                "cancel_url": f"{BACKEND_URL}/api/paypal-cancel",
+                "return_url": f"{BACKEND_URL}/api/paypal-return?booking_id={booking_id}",
+                "cancel_url": f"{BACKEND_URL}/api/paypal-cancel?booking_id={booking_id}",
             },
         }
         async with httpx.AsyncClient(timeout=10.0) as client:
@@ -114,7 +114,7 @@ class MockPaymentProvider:
         usd_cents = paise_to_usd_cents(total_paise)
         usd_value = cents_to_usd_str(usd_cents)
         order_id = f"MOCK-ORD-{uuid.uuid4().hex[:8].upper()}"
-        approve_url = f"http://localhost:8000/api/mock-paypal-approve?order_id={order_id}&booking_id={booking_id}"
+        approve_url = f"{BACKEND_URL}/api/mock-paypal-approve?order_id={order_id}&booking_id={booking_id}"
         return {
             "provider": "MOCK",
             "order_id": order_id,

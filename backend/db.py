@@ -215,6 +215,21 @@ async def get_booking(booking_id: str, db_path: str = DB_PATH) -> Optional[dict]
         row = await cursor.fetchone()
         return dict(row) if row else None
 
+
+async def set_booking_order_id(
+    booking_id: str,
+    paypal_order_id: str,
+    db_path: str = DB_PATH
+) -> bool:
+    """Binds created PayPal order ID to the pending booking."""
+    async with aiosqlite.connect(db_path) as db:
+        cursor = await db.execute(
+            "UPDATE bookings SET paypal_order_id = ? WHERE booking_id = ?",
+            (paypal_order_id, booking_id)
+        )
+        await db.commit()
+        return cursor.rowcount > 0
+
 async def update_booking_payment(
     booking_id: str,
     paypal_order_id: str,
