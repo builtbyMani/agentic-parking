@@ -1,5 +1,5 @@
 {
-  "negotiation_id": "neg_d8f60452",
+  "negotiation_id": "neg_daf2dd7e",
   "plate_number": "KA-01-MJ-2026",
   "driver_constraints": {
     "max_budget_per_hour_paise": 3800,
@@ -9,21 +9,21 @@
     "walk_penalty_paise_per_m": 2
   },
   "winner": {
-    "lot_id": "LOT_A",
-    "name": "Lot A (City Center)",
-    "slot_id": "A-01",
-    "agreed_rate_paise": 3500,
-    "agreed_rate_rupees": 35,
-    "total_paise": 10500,
-    "total_rupees": 105,
-    "usd_cents": 125,
-    "usd_display": "$1.25",
-    "booking_id": "bk_636ce9ac"
+    "lot_id": "LOT_C",
+    "name": "Lot C (Metro Plaza)",
+    "slot_id": "C-01",
+    "agreed_rate_paise": 3200,
+    "agreed_rate_rupees": 32,
+    "total_paise": 9600,
+    "total_rupees": 96,
+    "usd_cents": 114,
+    "usd_display": "$1.14",
+    "booking_id": "bk_b3b91c48"
   },
   "events": [
     {
       "event_type": "NEGOTIATION_STARTED",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
         "driver_constraints": {
           "max_budget_per_hour_paise": 3800,
@@ -35,11 +35,11 @@
         "total_lots_considered": 3,
         "plate_number": "KA-01-MJ-2026"
       },
-      "timestamp": 1792145321
+      "timestamp": 1792146905
     },
     {
       "event_type": "LOT_SKIPPED",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
         "lot_id": "LOT_B",
         "lot_name": "Lot B (North Garage)",
@@ -47,13 +47,13 @@
         "max_distance_m": 400,
         "reason": "Lot B (North Garage): 500m exceeds 400m limit \u2014 skipped."
       },
-      "timestamp": 1792145321
+      "timestamp": 1792146905
     },
     {
       "event_type": "REQUEST",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "negotiation_id": "neg_d8f60452",
+        "negotiation_id": "neg_daf2dd7e",
         "lot_id": "LOT_A",
         "round_num": 0,
         "from_agent": "driver",
@@ -70,13 +70,13 @@
         "model_used": "deterministic-anchor",
         "latency_ms": 0
       },
-      "timestamp": 1792145321
+      "timestamp": 1792146905
     },
     {
       "event_type": "REQUEST",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "negotiation_id": "neg_d8f60452",
+        "negotiation_id": "neg_daf2dd7e",
         "lot_id": "LOT_C",
         "round_num": 0,
         "from_agent": "driver",
@@ -93,82 +93,82 @@
         "model_used": "deterministic-anchor",
         "latency_ms": 0
       },
-      "timestamp": 1792145321
+      "timestamp": 1792146905
     },
     {
       "event_type": "OFFER",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "negotiation_id": "neg_d8f60452",
-        "lot_id": "LOT_C",
-        "round_num": 1,
-        "from_agent": "LOT_C",
-        "to_agent": "driver",
-        "action": "OFFER",
-        "raw_llm_paise": 3700,
-        "price_per_hour_paise": 3700,
-        "hours": 3,
-        "prepay": true,
-        "message": "With an event nearby and 50% occupancy, our best rate for 3 hours prepaid is \u20b937/hr.",
-        "reasoning": "Countering above the 3200 paise floor to capture demand during a nearby event while offering a prepay discount.",
-        "guard_triggered": false,
-        "guard_reason": null,
-        "model_used": "gemini-3.5-flash-lite",
-        "latency_ms": 5142
-      },
-      "timestamp": 1792145326
-    },
-    {
-      "event_type": "OFFER",
-      "negotiation_id": "neg_d8f60452",
-      "data": {
-        "negotiation_id": "neg_d8f60452",
+        "negotiation_id": "neg_daf2dd7e",
         "lot_id": "LOT_A",
         "round_num": 1,
         "from_agent": "LOT_A",
         "to_agent": "driver",
         "action": "OFFER",
-        "raw_llm_paise": 3700,
-        "price_per_hour_paise": 3700,
+        "raw_llm_paise": 3800,
+        "price_per_hour_paise": 3800,
         "hours": 3,
         "prepay": true,
-        "message": "Can offer \u20b937/hr for prepaid multi-hour slot.",
+        "message": "\u20b932 is below our minimum. With high demand and your 3-hour prepay discount, we can offer \u20b938/hr.",
+        "reasoning": "Driver offer is below floor; high occupancy and active event justify a counter offer of 3800 paise.",
+        "guard_triggered": false,
+        "guard_reason": null,
+        "model_used": "gemini-3.5-flash",
+        "latency_ms": 12880
+      },
+      "timestamp": 1792146917
+    },
+    {
+      "event_type": "OFFER",
+      "negotiation_id": "neg_daf2dd7e",
+      "data": {
+        "negotiation_id": "neg_daf2dd7e",
+        "lot_id": "LOT_C",
+        "round_num": 1,
+        "from_agent": "LOT_C",
+        "to_agent": "driver",
+        "action": "OFFER",
+        "raw_llm_paise": 3500,
+        "price_per_hour_paise": 3500,
+        "hours": 3,
+        "prepay": true,
+        "message": "Can offer \u20b935/hr for prepaid multi-hour slot.",
         "reasoning": "Rule-based concession step toward policy floor (API fallback).",
         "guard_triggered": false,
         "guard_reason": null,
         "model_used": "fallback-rule-engine",
-        "latency_ms": 6836
+        "latency_ms": 14120
       },
-      "timestamp": 1792145327
+      "timestamp": 1792146919
     },
     {
       "event_type": "COUNTER",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "negotiation_id": "neg_d8f60452",
+        "negotiation_id": "neg_daf2dd7e",
         "lot_id": "LOT_C",
         "round_num": 1,
         "from_agent": "driver",
         "to_agent": "LOT_C",
         "action": "COUNTER",
-        "raw_llm_paise": 3400,
-        "price_per_hour_paise": 3400,
+        "raw_llm_paise": 3200,
+        "price_per_hour_paise": 3200,
         "hours": 3,
         "prepay": true,
-        "message": "I can come up to \u20b934/hr if we lock it now.",
-        "reasoning": "Rule-based concession step toward reservation budget (API fallback).",
+        "message": "That is slightly high for Lot C given the 250m walk. Can we do 32 rupees?",
+        "reasoning": "Countering below their offer of 35 to inch closer to my budget while testing their flexibility.",
         "guard_triggered": false,
         "guard_reason": null,
-        "model_used": "fallback-rule-engine",
-        "latency_ms": 6297
+        "model_used": "gemini-3.5-flash-lite",
+        "latency_ms": 9749
       },
-      "timestamp": 1792145332
+      "timestamp": 1792146929
     },
     {
       "event_type": "COUNTER",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "negotiation_id": "neg_d8f60452",
+        "negotiation_id": "neg_daf2dd7e",
         "lot_id": "LOT_A",
         "round_num": 1,
         "from_agent": "driver",
@@ -183,211 +183,211 @@
         "guard_triggered": false,
         "guard_reason": null,
         "model_used": "fallback-rule-engine",
-        "latency_ms": 4790
+        "latency_ms": 14256
       },
-      "timestamp": 1792145332
+      "timestamp": 1792146932
     },
     {
       "event_type": "COUNTER",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "negotiation_id": "neg_d8f60452",
-        "lot_id": "LOT_C",
-        "round_num": 2,
-        "from_agent": "LOT_C",
-        "to_agent": "driver",
-        "action": "COUNTER",
-        "raw_llm_paise": 3600,
-        "price_per_hour_paise": 3600,
-        "hours": 3,
-        "prepay": true,
-        "message": "With the nearby event and limited slots, \u20b936/hr is our absolute floor for a 3-hour prepaid stay.",
-        "reasoning": "Reducing the rate slightly from 37 to 36 paise accommodates the driver while staying comfortably above the owner base floor of 3200 paise during an active event.",
-        "guard_triggered": false,
-        "guard_reason": null,
-        "model_used": "gemini-3.5-flash-lite",
-        "latency_ms": 3393
-      },
-      "timestamp": 1792145335
-    },
-    {
-      "event_type": "COUNTER",
-      "negotiation_id": "neg_d8f60452",
-      "data": {
-        "negotiation_id": "neg_d8f60452",
-        "lot_id": "LOT_C",
-        "round_num": 2,
-        "from_agent": "driver",
-        "to_agent": "LOT_C",
-        "action": "COUNTER",
-        "raw_llm_paise": 3600,
-        "price_per_hour_paise": 3600,
-        "hours": 3,
-        "prepay": true,
-        "message": "I can come up to \u20b936/hr if we lock it now.",
-        "reasoning": "Rule-based concession step toward reservation budget (API fallback).",
-        "guard_triggered": false,
-        "guard_reason": null,
-        "model_used": "fallback-rule-engine",
-        "latency_ms": 4198
-      },
-      "timestamp": 1792145340
-    },
-    {
-      "event_type": "COUNTER",
-      "negotiation_id": "neg_d8f60452",
-      "data": {
-        "negotiation_id": "neg_d8f60452",
-        "lot_id": "LOT_C",
-        "round_num": 3,
-        "from_agent": "LOT_C",
-        "to_agent": "driver",
-        "action": "COUNTER",
-        "raw_llm_paise": 3600,
-        "price_per_hour_paise": 3600,
-        "hours": 3,
-        "prepay": true,
-        "message": "Agreed, we have a deal at \u20b936/hr for your 3-hour prepaid stay.",
-        "reasoning": "The driver met our floor price of \u20b936/hr in the final round, so we accept to secure the booking.",
-        "guard_triggered": false,
-        "guard_reason": null,
-        "model_used": "gemini-3.5-flash-lite",
-        "latency_ms": 4661
-      },
-      "timestamp": 1792145344
-    },
-    {
-      "event_type": "AMBER_CLAMP",
-      "negotiation_id": "neg_d8f60452",
-      "data": {
-        "agent": "LOT_A",
-        "round_num": 2,
-        "raw_paise": 3300,
-        "clamped_paise": 3500,
-        "reason": "Agent asked \u20b933 below driver's accepted bid \u20b935, clamped."
-      },
-      "timestamp": 1792145345
-    },
-    {
-      "event_type": "COUNTER",
-      "negotiation_id": "neg_d8f60452",
-      "data": {
-        "negotiation_id": "neg_d8f60452",
+        "negotiation_id": "neg_daf2dd7e",
         "lot_id": "LOT_A",
         "round_num": 2,
         "from_agent": "LOT_A",
         "to_agent": "driver",
         "action": "COUNTER",
-        "raw_llm_paise": 3300,
-        "price_per_hour_paise": 3500,
+        "raw_llm_paise": 3800,
+        "price_per_hour_paise": 3800,
         "hours": 3,
         "prepay": true,
-        "message": "Can offer \u20b935/hr for prepaid multi-hour slot. [Adjusted to policy limit \u20b935/hr]",
-        "reasoning": "Rule-based concession step toward policy floor (API fallback).",
-        "guard_triggered": true,
-        "guard_reason": "Agent asked \u20b933 below driver's accepted bid \u20b935, clamped.",
-        "model_used": "fallback-rule-engine",
-        "latency_ms": 12815
+        "message": "Due to high occupancy and a local event, our best rate for a 3-hour prepay is 3800 paise per hour.",
+        "reasoning": "The requested 3500 paise is at the absolute floor, but high demand and event-driven occupancy justify holding at 3800 paise to maximize revenue.",
+        "guard_triggered": false,
+        "guard_reason": null,
+        "model_used": "gemini-3.1-flash-lite",
+        "latency_ms": 8834
       },
-      "timestamp": 1792145345
-    },
-    {
-      "event_type": "AMBER_CLAMP",
-      "negotiation_id": "neg_d8f60452",
-      "data": {
-        "agent": "driver",
-        "round_num": 2,
-        "raw_paise": 3700,
-        "clamped_paise": 3500,
-        "reason": "Driver bid above Lot's ask of \u20b935, clamped."
-      },
-      "timestamp": 1792145353
+      "timestamp": 1792146941
     },
     {
       "event_type": "COUNTER",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "negotiation_id": "neg_d8f60452",
+        "negotiation_id": "neg_daf2dd7e",
         "lot_id": "LOT_A",
         "round_num": 2,
         "from_agent": "driver",
         "to_agent": "LOT_A",
         "action": "COUNTER",
         "raw_llm_paise": 3700,
-        "price_per_hour_paise": 3500,
+        "price_per_hour_paise": 3700,
         "hours": 3,
         "prepay": true,
-        "message": "I can come up to \u20b935/hr if we lock it now. [Adjusted to policy limit \u20b935/hr]",
-        "reasoning": "Rule-based concession step toward reservation budget (API fallback).",
-        "guard_triggered": true,
-        "guard_reason": "Driver bid above Lot's ask of \u20b935, clamped.",
-        "model_used": "fallback-rule-engine",
-        "latency_ms": 8308
+        "message": "Can we meet slightly in the middle at 3700 paise per hour with prepay?",
+        "reasoning": "Countering just below their firm offer of 3800 while staying at my maximum private budget limit.",
+        "guard_triggered": false,
+        "guard_reason": null,
+        "model_used": "gemini-3.5-flash-lite",
+        "latency_ms": 5279
       },
-      "timestamp": 1792145353
+      "timestamp": 1792146946
     },
     {
       "event_type": "AMBER_CLAMP",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "agent": "LOT_A",
-        "round_num": 3,
-        "raw_paise": 3300,
-        "clamped_paise": 3500,
-        "reason": "Agent asked \u20b933 below driver's accepted bid \u20b935, clamped."
+        "agent": "LOT_C",
+        "round_num": 2,
+        "raw_paise": 3100,
+        "clamped_paise": 3200,
+        "reason": "Agent asked \u20b931 below driver's accepted bid \u20b932, clamped."
       },
-      "timestamp": 1792145362
+      "timestamp": 1792146947
     },
     {
       "event_type": "COUNTER",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "negotiation_id": "neg_d8f60452",
+        "negotiation_id": "neg_daf2dd7e",
+        "lot_id": "LOT_C",
+        "round_num": 2,
+        "from_agent": "LOT_C",
+        "to_agent": "driver",
+        "action": "COUNTER",
+        "raw_llm_paise": 3100,
+        "price_per_hour_paise": 3200,
+        "hours": 3,
+        "prepay": true,
+        "message": "Can offer \u20b932/hr for prepaid multi-hour slot. [Adjusted to policy limit \u20b932/hr]",
+        "reasoning": "Rule-based concession step toward policy floor (API fallback).",
+        "guard_triggered": true,
+        "guard_reason": "Agent asked \u20b931 below driver's accepted bid \u20b932, clamped.",
+        "model_used": "fallback-rule-engine",
+        "latency_ms": 18203
+      },
+      "timestamp": 1792146947
+    },
+    {
+      "event_type": "AMBER_CLAMP",
+      "negotiation_id": "neg_daf2dd7e",
+      "data": {
+        "agent": "LOT_A",
+        "round_num": 3,
+        "raw_paise": 3400,
+        "clamped_paise": 3700,
+        "reason": "Agent asked \u20b934 below driver's accepted bid \u20b937, clamped."
+      },
+      "timestamp": 1792146957
+    },
+    {
+      "event_type": "COUNTER",
+      "negotiation_id": "neg_daf2dd7e",
+      "data": {
+        "negotiation_id": "neg_daf2dd7e",
         "lot_id": "LOT_A",
         "round_num": 3,
         "from_agent": "LOT_A",
         "to_agent": "driver",
         "action": "COUNTER",
-        "raw_llm_paise": 3300,
-        "price_per_hour_paise": 3500,
+        "raw_llm_paise": 3400,
+        "price_per_hour_paise": 3700,
         "hours": 3,
         "prepay": true,
-        "message": "Can offer \u20b935/hr for prepaid multi-hour slot. [Adjusted to policy limit \u20b935/hr]",
+        "message": "Can offer \u20b937/hr for prepaid multi-hour slot. [Adjusted to policy limit \u20b937/hr]",
         "reasoning": "Rule-based concession step toward policy floor (API fallback).",
         "guard_triggered": true,
-        "guard_reason": "Agent asked \u20b933 below driver's accepted bid \u20b935, clamped.",
+        "guard_reason": "Agent asked \u20b934 below driver's accepted bid \u20b937, clamped.",
         "model_used": "fallback-rule-engine",
-        "latency_ms": 8194
+        "latency_ms": 11548
       },
-      "timestamp": 1792145362
+      "timestamp": 1792146957
+    },
+    {
+      "event_type": "AMBER_CLAMP",
+      "negotiation_id": "neg_daf2dd7e",
+      "data": {
+        "agent": "driver",
+        "round_num": 2,
+        "raw_paise": 3100,
+        "clamped_paise": 3200,
+        "reason": "Driver lowered bid below prior \u20b932, clamped."
+      },
+      "timestamp": 1792146962
+    },
+    {
+      "event_type": "COUNTER",
+      "negotiation_id": "neg_daf2dd7e",
+      "data": {
+        "negotiation_id": "neg_daf2dd7e",
+        "lot_id": "LOT_C",
+        "round_num": 2,
+        "from_agent": "driver",
+        "to_agent": "LOT_C",
+        "action": "COUNTER",
+        "raw_llm_paise": 3100,
+        "price_per_hour_paise": 3200,
+        "hours": 3,
+        "prepay": true,
+        "message": "Can we settle on \u20b932/hr for 3 hours prepaid? [Adjusted to policy limit \u20b932/hr]",
+        "reasoning": "Countering slightly below their \u20b932/hr offer to secure a better rate.",
+        "guard_triggered": true,
+        "guard_reason": "Driver lowered bid below prior \u20b932, clamped.",
+        "model_used": "gemini-3.5-flash",
+        "latency_ms": 14705
+      },
+      "timestamp": 1792146962
+    },
+    {
+      "event_type": "COUNTER",
+      "negotiation_id": "neg_daf2dd7e",
+      "data": {
+        "negotiation_id": "neg_daf2dd7e",
+        "lot_id": "LOT_C",
+        "round_num": 3,
+        "from_agent": "LOT_C",
+        "to_agent": "driver",
+        "action": "COUNTER",
+        "raw_llm_paise": 3200,
+        "price_per_hour_paise": 3200,
+        "hours": 3,
+        "prepay": true,
+        "message": "We accept your offer of 3200 paise per hour for the 3-hour prepaid booking.",
+        "reasoning": "The driver's offer matches our owner base floor price, which is the lowest sustainable rate allowed.",
+        "guard_triggered": false,
+        "guard_reason": null,
+        "model_used": "gemini-3.1-flash-lite",
+        "latency_ms": 6008
+      },
+      "timestamp": 1792146968
     },
     {
       "event_type": "ACCEPT",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "winner_lot_id": "LOT_A",
-        "winner_name": "Lot A (City Center)",
-        "slot_id": "A-01",
-        "agreed_rate_paise": 3500,
-        "agreed_rate_rupees": 35,
-        "total_paise": 10500,
-        "total_rupees": 105,
-        "usd_cents": 125,
-        "booking_id": "bk_636ce9ac",
+        "winner_lot_id": "LOT_C",
+        "winner_name": "Lot C (Metro Plaza)",
+        "slot_id": "C-01",
+        "agreed_rate_paise": 3200,
+        "agreed_rate_rupees": 32,
+        "total_paise": 9600,
+        "total_rupees": 96,
+        "usd_cents": 114,
+        "booking_id": "bk_b3b91c48",
         "soft_lock_seconds": 180,
-        "message": "Deal accepted at \u20b935/hr \u00d7 3h = \u20b9105. Slot A-01 reserved for 180s."
+        "message": "Deal accepted at \u20b932/hr \u00d7 3h = \u20b996. Slot C-01 reserved for 180s."
       },
-      "timestamp": 1792145362
+      "timestamp": 1792146968
     },
     {
       "event_type": "WALK_AWAY",
-      "negotiation_id": "neg_d8f60452",
+      "negotiation_id": "neg_daf2dd7e",
       "data": {
-        "lot_id": "LOT_C",
-        "lot_name": "Lot C (Metro Plaza)",
-        "reason": "Driver selected Lot A (City Center) at \u20b935/hr."
+        "lot_id": "LOT_A",
+        "lot_name": "Lot A (City Center)",
+        "reason": "Driver selected Lot C (Metro Plaza) at \u20b932/hr."
       },
-      "timestamp": 1792145362
+      "timestamp": 1792146968
     }
   ],
   "recorded_at": "2026-10-15T19:00:00Z"

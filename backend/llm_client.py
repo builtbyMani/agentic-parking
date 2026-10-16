@@ -1,9 +1,12 @@
 import os
 import time
 import asyncio
+import logging
 from typing import Optional
 from backend.config import GEMINI_API_KEY, LLM_MODE
 from backend.schemas import AgentMoveLLM, LotPolicy, DriverConstraints
+
+logger = logging.getLogger("llm_client")
 
 llm_semaphore = asyncio.Semaphore(2)
 _client = None
@@ -107,6 +110,14 @@ def build_driver_prompts(
     )
     return sys_prompt, usr_prompt
 
+AGENT_MODEL_PREFERENCES = {
+    "driver": ["gemini-3.1-flash-lite", "gemini-3.5-flash-lite", "gemini-3.5-flash"],
+    "lot": ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-3.5-flash"],
+    "LOT_A": ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-3.5-flash"],
+    "LOT_B": ["gemini-3.1-flash-lite", "gemini-3.5-flash-lite", "gemini-3.5-flash"],
+    "LOT_C": ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3.5-flash-lite"],
+}
+
 async def call_agent_llm(
     role: str,
     system_prompt: str,
@@ -114,13 +125,14 @@ async def call_agent_llm(
     fallback_args: tuple
 ) -> tuple[AgentMoveLLM, str, int]:
     """
-    Calls Gemini API with dual-model quota isolation and rate-limiting:
-    - Driver queries gemini-3.1-flash-lite
-    - Lot queries gemini-3.5-flash-lite
-    - Semaphore(2) limits concurrent active requests
-    - Gracefully falls back to deterministic mathematical concession upon error
+    Calls Gemini API with multi-model quota sharding and automatic rate-limit fallover:
+    - Driver queries gemini-3.5-flash
+    - Lot A queries gemini-3.5-flash-lite
+    - Lot B queries gemini-3.1-flash-lite
+    - Lot C queries gemini-3.5-flash
+    - If any model hits a 429 rate limit or 503 spike, automatically hops to the next candidate model
+    - Gracefully falls back to deterministic mathematical concession if all models exhausted
     """
-    model_id = "gemini-3.1-flash-lite" if role == "driver" else "gemini-3.5-flash-lite"
     start_t = time.perf_counter()
 
     current_mode = os.environ.get("LLM_MODE", LLM_MODE)
@@ -138,8 +150,10 @@ async def call_agent_llm(
         move, model_name = deterministic_fallback_move(*fallback_args)
         return move, model_name, 5
 
+    candidate_models = AGENT_MODEL_PREFERENCES.get(role, AGENT_MODEL_PREFERENCES["lot"])
+
     async with llm_semaphore:
-        for attempt in range(2):
+        for model_id in candidate_models:
             try:
                 res = await asyncio.wait_for(
                     genai_client.aio.models.generate_content(
@@ -156,13 +170,17 @@ async def call_agent_llm(
                 )
                 latency_ms = int((time.perf_counter() - start_t) * 1000)
                 return AgentMoveLLM.model_validate_json(res.text), model_id, latency_ms
-            except Exception:
-                if attempt == 0:
-                    await asyncio.sleep(0.8)
-                else:
-                    latency_ms = int((time.perf_counter() - start_t) * 1000)
-                    move, model_name = deterministic_fallback_move(*fallback_args)
-                    return move, model_name, latency_ms
+            except Exception as e:
+                logger.warning(
+                    f"[{role}] Model '{model_id}' failed or rate-limited ({e}). "
+                    "Hopping to next candidate model in pool..."
+                )
+                await asyncio.sleep(0.2)
+
+        # Fall back to deterministic mathematical concession if all candidates exhausted
+        latency_ms = int((time.perf_counter() - start_t) * 1000)
+        move, model_name = deterministic_fallback_move(*fallback_args)
+        return move, model_name, latency_ms
 
 # Alias for convenience
 call_agent = call_agent_llm

@@ -49,11 +49,15 @@ async def negotiate_with_single_lot(
     driver: DriverConstraints,
     lot: LotPolicy,
     event_callback: Optional[Callable] = None,
-    event_log: Optional[list] = None
+    event_log: Optional[list] = None,
+    stagger_delay_s: float = 0.0,
 ) -> dict:
     """
     Executes a 3-round bilateral negotiation between Driver and a single Parking Lot.
     """
+    if stagger_delay_s > 0:
+        await asyncio.sleep(stagger_delay_s)
+
     eff_floor = compute_effective_lot_floor_paise(lot, driver.hours, driver.prepay)
     anchor_paise = compute_opening_request_anchor(lot.base_list_paise)
 
@@ -88,7 +92,7 @@ async def negotiate_with_single_lot(
         # 1. Lot's Turn
         lot_sys, lot_usr = build_lot_prompts(lot, driver.hours, driver.prepay, r, history_lines)
         lot_fallback_args = ("lot", r, eff_floor, last_lot_ask, last_driver_bid)
-        raw_lot_move, lot_model, lot_latency = await call_agent_llm("lot", lot_sys, lot_usr, lot_fallback_args)
+        raw_lot_move, lot_model, lot_latency = await call_agent_llm(lot.lot_id, lot_sys, lot_usr, lot_fallback_args)
 
         clamped_lot_paise, lot_action, lot_msg, lot_clamped, lot_reason = enforce_lot_guard(
             raw_lot_move, lot, driver.hours, driver.prepay, r, last_lot_ask, last_driver_bid
@@ -234,10 +238,12 @@ async def run_multi_lot_negotiation(
             "event_log": event_log,
         }
 
-    # Step 2: Parallel Bilateral Rounds across Active Lots
+    # Step 2: Staggered Parallel Bilateral Rounds across Active Lots
     tasks = [
-        negotiate_with_single_lot(negotiation_id, driver, lot, event_callback, event_log)
-        for lot in active_lots
+        negotiate_with_single_lot(
+            negotiation_id, driver, lot, event_callback, event_log, stagger_delay_s=idx * 0.25
+        )
+        for idx, lot in enumerate(active_lots)
     ]
     lot_results = await asyncio.gather(*tasks)
 
