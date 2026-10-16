@@ -3,6 +3,13 @@ import { QRCodeSVG } from 'qrcode.react';
 import { WinnerData } from '../types';
 import { X, ExternalLink, ShieldCheck, QrCode, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
 
+interface CheckoutData {
+  order_id?: string;
+  approve_url?: string;
+  usd_cents?: number;
+  [key: string]: unknown;
+}
+
 interface QRPassModalProps {
   winner: WinnerData | null;
   isOpen: boolean;
@@ -10,11 +17,12 @@ interface QRPassModalProps {
 }
 
 export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClose }) => {
-  const [checkoutData, setCheckoutData] = useState<any>(null);
+  const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null);
   const [qrToken, setQrToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [gateFeedback, setGateFeedback] = useState<string | null>(null);
-  const [cooldownTime, setCooldownTime] = useState<number>(0);
+
+  const apiBase = typeof window !== 'undefined' && window.location.port === '5173' ? '' : 'http://localhost:8000';
 
   // Load checkout session upon open
   useEffect(() => {
@@ -22,7 +30,7 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
       setQrToken(null);
       setGateFeedback(null);
       setLoading(true);
-      fetch(`http://localhost:8000/api/bookings/${winner.booking_id}/checkout`, {
+      fetch(`${apiBase}/api/bookings/${winner.booking_id}/checkout`, {
         method: 'POST',
       })
         .then((res) => res.json())
@@ -35,7 +43,7 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
           setLoading(false);
         });
     }
-  }, [isOpen, winner]);
+  }, [isOpen, winner, apiBase]);
 
   if (!isOpen || !winner) return null;
 
@@ -43,7 +51,7 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
   const handleConfirmPayment = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:8000/api/bookings/${winner.booking_id}/confirm`, {
+      const res = await fetch(`${apiBase}/api/bookings/${winner.booking_id}/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order_id: checkoutData?.order_id || 'DEMO_ORDER' }),
@@ -64,7 +72,7 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
     if (!qrToken) return;
     try {
       setGateFeedback('Scanning QR pass at security gate...');
-      const res = await fetch('http://localhost:8000/api/gate/verify-qr', {
+      const res = await fetch(`${apiBase}/api/gate/verify-qr`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ qr_token: qrToken }),

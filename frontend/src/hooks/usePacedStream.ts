@@ -25,9 +25,24 @@ export function usePacedStream(paceMs: number = 1200) {
         setIsPacing(queueRef.current.length > 0);
 
         // Update domain state based on paced event
-        if (nextEvt.event_type === 'WINNER_DECLARED') {
-          setWinner(nextEvt.data.winner);
-          setStatusText(`Winner Declared: ${nextEvt.data.winner.name}`);
+        if (nextEvt.event_type === 'ACCEPT' || nextEvt.event_type === 'WINNER_DECLARED') {
+          const d = nextEvt.data?.winner || nextEvt.data;
+          if (d && (d.winner_lot_id || d.lot_id)) {
+            const winnerData: WinnerData = {
+              lot_id: d.winner_lot_id || d.lot_id,
+              name: d.winner_name || d.name,
+              slot_id: d.slot_id,
+              agreed_rate_paise: d.agreed_rate_paise,
+              agreed_rate_rupees: d.agreed_rate_rupees ?? Math.round(d.agreed_rate_paise / 100),
+              total_paise: d.total_paise,
+              total_rupees: d.total_rupees ?? Math.round(d.total_paise / 100),
+              usd_cents: d.usd_cents,
+              usd_display: `$${((d.usd_cents || 0) / 100).toFixed(2)}`,
+              booking_id: d.booking_id,
+            };
+            setWinner(winnerData);
+            setStatusText(`Deal Locked: ${winnerData.name} (Slot ${winnerData.slot_id})`);
+          }
         } else if (nextEvt.event_type === 'GATE_OPENED') {
           setGateState('OPEN');
         } else if (nextEvt.event_type === 'GATE_CLOSED') {
@@ -42,6 +57,10 @@ export function usePacedStream(paceMs: number = 1200) {
           );
         } else if (nextEvt.event_type === 'ROUND_COMPLETED') {
           setStatusText(`Round ${nextEvt.data.round} Completed`);
+        } else if (nextEvt.event_type === 'NEGOTIATION_ERROR') {
+          setStatusText(`Negotiation Error: ${nextEvt.data?.error || 'Task failed'}`);
+        } else if (nextEvt.event_type === 'NO_DEAL') {
+          setStatusText(`No Deal: ${nextEvt.data?.reason || 'Criteria not met'}`);
         }
       } else {
         setIsPacing(false);
@@ -54,7 +73,7 @@ export function usePacedStream(paceMs: number = 1200) {
   // WebSocket Connection
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.hostname}:8000/ws`;
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
@@ -142,7 +161,8 @@ export function usePacedStream(paceMs: number = 1200) {
       queueRef.current = [];
       setStatusText('Dispatching Autonomous Negotiation...');
 
-      const res = await fetch('http://localhost:8000/api/negotiate', {
+      const endpoint = '/api/negotiate';
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(constraints),

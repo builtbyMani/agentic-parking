@@ -1,3 +1,4 @@
+from typing import Optional
 from backend.schemas import LotPolicy
 
 def compute_effective_lot_floor_paise(policy: LotPolicy, hours: int, prepay: bool) -> int:
@@ -11,13 +12,13 @@ def compute_effective_lot_floor_paise(policy: LotPolicy, hours: int, prepay: boo
         return int(round(discounted / 100.0) * 100)
     return policy.base_floor_paise
 
-def compute_opening_request_anchor(list_paise: int, budget_paise: int) -> int:
+def compute_opening_request_anchor(list_paise: int, budget_paise: Optional[int] = None) -> int:
     """
-    Calculates deterministic opening REQUEST anchor for driver:
-    min(list * 0.72, budget * 0.80) rounded to nearest 100 paise.
+    Calculates deterministic opening REQUEST anchor for driver purely from public list price:
+    list * 0.72 rounded to nearest 100 paise.
+    Zero leakage of driver's private reservation budget.
     """
-    anchor = min(int(list_paise * 0.72), int(budget_paise * 0.80))
-    return int(round(anchor / 100.0) * 100)
+    return int(round((list_paise * 0.72) / 100.0) * 100)
 
 def calculate_total_paise(agreed_rate_paise: int, hours: int) -> int:
     """Pure Python deterministic total calculation."""

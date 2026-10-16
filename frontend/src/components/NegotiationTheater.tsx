@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { NegotiationEvent, WinnerData, ValidatedMove } from '../types';
 import { ShieldAlert, Car, Building2, CheckCircle2, ChevronDown, ChevronUp, Clock, ExternalLink } from 'lucide-react';
 
@@ -16,6 +16,11 @@ export const NegotiationTheater: React.FC<NegotiationTheaterProps> = ({
   isPacing,
 }) => {
   const [expandedReasonings, setExpandedReasonings] = useState<Record<string, boolean>>({});
+  const chatBottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [events.length]);
 
   const toggleReasoning = (idx: string) => {
     setExpandedReasonings((prev) => ({ ...prev, [idx]: !prev[idx] }));
@@ -83,6 +88,56 @@ export const NegotiationTheater: React.FC<NegotiationTheaterProps> = ({
             );
           }
 
+          if (evt.event_type === 'ACCEPT' && !evt.data.from_agent) {
+            const data = evt.data;
+            return (
+              <div
+                key={idx}
+                className="bg-emerald-950/60 border border-emerald-500/80 text-emerald-100 rounded-xl p-3.5 my-2 shadow-lg flex items-center justify-between animate-in fade-in duration-300"
+              >
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                  <div>
+                    <div className="font-bold text-white text-sm">
+                      Deal Accepted: {data.winner_name || data.winner_lot_id || 'Winner'}
+                    </div>
+                    <div className="text-xs text-emerald-300/90 mt-0.5">
+                      {data.message || `Slot ${data.slot_id} reserved at ₹${data.agreed_rate_rupees || Math.round(data.agreed_rate_paise / 100)}/hr`}
+                    </div>
+                  </div>
+                </div>
+                <span className="text-xs bg-emerald-500 text-slate-950 font-bold px-2.5 py-1 rounded-full shrink-0">
+                  Slot {data.slot_id}
+                </span>
+              </div>
+            );
+          }
+
+          if (evt.event_type === 'WALK_AWAY' && !evt.data.from_agent) {
+            const data = evt.data;
+            return (
+              <div
+                key={idx}
+                className="bg-slate-900/60 border border-slate-800 text-slate-400 rounded-lg py-2 px-3 text-xs mx-auto max-w-md flex items-center justify-center gap-2 animate-in fade-in duration-300"
+              >
+                <span className="font-semibold text-slate-300">{data.lot_name || data.lot_id}:</span>
+                <span>{data.reason || 'Negotiation concluded.'}</span>
+              </div>
+            );
+          }
+
+          if (evt.event_type === 'NEGOTIATION_ERROR' || evt.event_type === 'NO_DEAL') {
+            return (
+              <div
+                key={idx}
+                className="bg-rose-950/50 border border-rose-800/80 text-rose-200 rounded-lg p-3 text-xs flex items-center gap-2 animate-in fade-in duration-300"
+              >
+                <ShieldAlert className="w-4 h-4 text-rose-400 shrink-0" />
+                <span>{evt.data.error || evt.data.reason || 'Negotiation concluded without deal.'}</span>
+              </div>
+            );
+          }
+
           if (!['REQUEST', 'OFFER', 'COUNTER', 'ACCEPT', 'WALK_AWAY'].includes(evt.event_type)) {
             return null;
           }
@@ -91,6 +146,15 @@ export const NegotiationTheater: React.FC<NegotiationTheaterProps> = ({
           const isDriver = move.from_agent === 'driver';
           const cardId = `card-${idx}`;
           const isExpanded = !!expandedReasonings[cardId];
+          const agentName = isDriver
+            ? 'Driver Agent'
+            : move.from_agent
+            ? move.from_agent.replace('lot_', '')
+            : move.lot_id || 'Agent';
+          const priceRupees =
+            move.price_per_hour_paise != null ? Math.round(move.price_per_hour_paise / 100) : 0;
+          const rawPriceRupees =
+            move.raw_llm_paise != null ? Math.round(move.raw_llm_paise / 100) : priceRupees;
 
           return (
             <div
@@ -108,13 +172,17 @@ export const NegotiationTheater: React.FC<NegotiationTheaterProps> = ({
                 <div className="flex items-center justify-between gap-3 text-xs pb-1.5 border-b border-slate-700/50 mb-2">
                   <div className="flex items-center gap-1.5 font-semibold">
                     {isDriver ? <Car className="w-3.5 h-3.5 text-sky-400" /> : <Building2 className="w-3.5 h-3.5 text-emerald-400" />}
-                    <span>{isDriver ? 'Driver Agent' : move.from_agent.replace('lot_', '')}</span>
-                    <span className="text-[10px] text-slate-400 font-mono px-1.5 py-0.2 bg-slate-800 rounded">
-                      {move.model_used}
-                    </span>
+                    <span>{agentName}</span>
+                    {move.model_used && (
+                      <span className="text-[10px] text-slate-400 font-mono px-1.5 py-0.2 bg-slate-800 rounded">
+                        {move.model_used}
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-slate-400 font-mono">{move.latency_ms}ms</span>
+                    {move.latency_ms != null && (
+                      <span className="text-[10px] text-slate-400 font-mono">{move.latency_ms}ms</span>
+                    )}
                     <span
                       className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
                         move.action === 'ACCEPT'
@@ -124,7 +192,7 @@ export const NegotiationTheater: React.FC<NegotiationTheaterProps> = ({
                           : 'bg-slate-700 text-slate-200'
                       }`}
                     >
-                      {move.action} ₹{Math.round(move.price_per_hour_paise / 100)}/hr
+                      {move.action} ₹{priceRupees}/hr
                     </span>
                   </div>
                 </div>
@@ -140,7 +208,7 @@ export const NegotiationTheater: React.FC<NegotiationTheaterProps> = ({
                       <span>ANTI-HALLUCINATION BARRIER: CLAMPED</span>
                     </div>
                     <p className="text-[11px] text-amber-200/90 leading-tight">
-                      Raw LLM bid: <span className="line-through text-rose-400">₹{Math.round(move.raw_llm_paise / 100)}/hr</span> → Enforced: <strong>₹{Math.round(move.price_per_hour_paise / 100)}/hr</strong>
+                      Raw LLM bid: <span className="line-through text-rose-400">₹{rawPriceRupees}/hr</span> → Enforced: <strong>₹{priceRupees}/hr</strong>
                     </p>
                     {move.guard_reason && (
                       <p className="text-[10px] text-amber-300/70 mt-1 italic font-mono">{move.guard_reason}</p>
@@ -169,6 +237,7 @@ export const NegotiationTheater: React.FC<NegotiationTheaterProps> = ({
             </div>
           );
         })}
+        <div ref={chatBottomRef} />
       </div>
 
       {/* Winner Soft-Lock Banner */}

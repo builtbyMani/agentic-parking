@@ -27,7 +27,7 @@ export const OfferLadderChart: React.FC<OfferLadderChartProps> = ({ events }) =>
     };
 
     events.forEach((evt) => {
-      if (['REQUEST', 'OFFER', 'COUNTER', 'ACCEPT'].includes(evt.event_type)) {
+      if (['REQUEST', 'OFFER', 'COUNTER'].includes(evt.event_type) && evt.data?.price_per_hour_paise != null) {
         const move = evt.data as ValidatedMove;
         const roundKey = move.round_num === 0 ? 'Opening' : `Round ${move.round_num}`;
         if (!roundsMap[roundKey]) {
@@ -36,7 +36,7 @@ export const OfferLadderChart: React.FC<OfferLadderChartProps> = ({ events }) =>
         const rupees = Math.round(move.price_per_hour_paise / 100);
         if (move.from_agent === 'driver') {
           roundsMap[roundKey].driver = rupees;
-        } else {
+        } else if (move.lot_id) {
           roundsMap[roundKey][move.lot_id] = rupees;
         }
       }

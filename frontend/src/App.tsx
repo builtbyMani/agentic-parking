@@ -67,7 +67,8 @@ export const App: React.FC = () => {
       prev.map((s) => (s.slot_id === slotId ? { ...s, sensor_occupied: nextOccupied ? 1 : 0 } : s))
     );
     try {
-      await fetch('http://localhost:8000/api/hardware/toggle-slot', {
+      const apiBase = typeof window !== 'undefined' && window.location.port === '5173' ? '' : 'http://localhost:8000';
+      await fetch(`${apiBase}/api/hardware/toggle-slot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ slot_id: slotId, occupied: nextOccupied }),

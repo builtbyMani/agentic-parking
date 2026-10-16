@@ -20,7 +20,7 @@ from backend.llm_client import (
     build_driver_prompts,
     call_agent_llm,
 )
-from backend.db import acquire_soft_lock, create_booking
+from backend.db import acquire_soft_lock, create_booking, get_lots
 
 async def emit_event(
     event_callback: Optional[Callable],
@@ -55,7 +55,7 @@ async def negotiate_with_single_lot(
     Executes a 3-round bilateral negotiation between Driver and a single Parking Lot.
     """
     eff_floor = compute_effective_lot_floor_paise(lot, driver.hours, driver.prepay)
-    anchor_paise = compute_opening_request_anchor(lot.base_list_paise, driver.max_budget_per_hour_paise)
+    anchor_paise = compute_opening_request_anchor(lot.base_list_paise)
 
     # Step 1: Opening Request Anchor
     opening_msg = f"Requesting {driver.hours}h parking at ₹{anchor_paise//100}/hr (prepay={driver.prepay})."
@@ -183,7 +183,7 @@ async def negotiate_with_single_lot(
 
 async def run_multi_lot_negotiation(
     driver: DriverConstraints,
-    lots: list[LotPolicy],
+    lots: Optional[list[LotPolicy]] = None,
     plate_number: str = "KA-01-MJ-2026",
     event_callback: Optional[Callable] = None,
     db_path: str = DB_PATH
@@ -196,6 +196,9 @@ async def run_multi_lot_negotiation(
     - Step 3: Deterministic Winner Evaluation
     - Step 4: Atomic Slot Soft-Lock and ACCEPT/WALK_AWAY signals
     """
+    if lots is None:
+        lots = await get_lots(db_path=db_path)
+
     negotiation_id = f"neg_{uuid.uuid4().hex[:8]}"
     event_log: list = []
 

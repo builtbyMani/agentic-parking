@@ -9,24 +9,15 @@ from typing import Any, Dict, Optional, Tuple, Union
 
 import httpx
 
-try:
-    from .config import (
-        USD_TO_INR_PAISE,
-        HMAC_SECRET_KEY,
-        PAYMENT_MODE,
-        PAYPAL_CLIENT_ID,
-        PAYPAL_CLIENT_SECRET,
-        PAYPAL_ENV,
-    )
-except ImportError:
-    from config import (
-        USD_TO_INR_PAISE,
-        HMAC_SECRET_KEY,
-        PAYMENT_MODE,
-        PAYPAL_CLIENT_ID,
-        PAYPAL_CLIENT_SECRET,
-        PAYPAL_ENV,
-    )
+from backend.config import (
+    USD_TO_INR_PAISE,
+    HMAC_SECRET_KEY,
+    PAYMENT_MODE,
+    PAYPAL_CLIENT_ID,
+    PAYPAL_CLIENT_SECRET,
+    PAYPAL_ENV,
+    BACKEND_URL,
+)
 
 
 def paise_to_usd_cents(total_paise: int) -> int:
@@ -76,8 +67,8 @@ class PayPalSandboxProvider:
                 "brand_name": "Agentic Parking Gate",
                 "landing_page": "NO_PREFERENCE",
                 "user_action": "PAY_NOW",
-                "return_url": "http://localhost:8000/api/paypal-return",
-                "cancel_url": "http://localhost:8000/api/paypal-cancel",
+                "return_url": f"{BACKEND_URL}/api/paypal-return",
+                "cancel_url": f"{BACKEND_URL}/api/paypal-cancel",
             },
         }
         async with httpx.AsyncClient(timeout=10.0) as client:

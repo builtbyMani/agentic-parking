@@ -10,6 +10,19 @@ from backend.serial_bridge import bridge
 
 
 import asyncio
+from unittest.mock import patch
+
+
+@pytest.fixture(autouse=True)
+def isolated_test_db(tmp_path):
+    """Ensures test_gate_flow runs on an isolated temporary SQLite database."""
+    test_db = str(tmp_path / "test_parking.db")
+    with patch("backend.config.DB_PATH", test_db), \
+         patch("backend.db.DB_PATH", test_db), \
+         patch("backend.orchestrator.DB_PATH", test_db), \
+         patch("backend.serial_bridge.DB_PATH", test_db):
+        asyncio.run(init_db(test_db))
+        yield test_db
 
 
 def test_rest_root_and_metadata():
@@ -130,3 +143,19 @@ def test_full_checkout_and_confirmation_lifecycle():
         gate_data = res_gate.json()
         assert gate_data["valid"] is True
         assert gate_data["status"] in ["ACCESS_GRANTED", "COOLDOWN_ACTIVE"]
+
+
+def test_api_negotiate_endpoint():
+    with TestClient(app) as client:
+        payload = {
+            "max_budget_per_hour_paise": 3800,
+            "max_walk_distance_m": 400,
+            "hours": 3,
+            "prepay": True,
+            "walk_penalty_paise_per_m": 2,
+        }
+        res = client.post("/api/negotiate", json=payload)
+        assert res.status_code == 200
+        data = res.json()
+        assert data["status"] == "negotiating"
+        assert data["driver"]["max_budget_per_hour_paise"] == 3800

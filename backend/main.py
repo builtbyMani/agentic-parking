@@ -7,42 +7,25 @@ from typing import Optional, List
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-try:
-    from .db import (
-        init_db,
-        get_lots,
-        get_slots,
-        get_booking,
-        confirm_slot_booking,
-        update_booking_payment,
-    )
-    from .schemas import DriverConstraints
-    from .orchestrator import run_multi_lot_negotiation
-    from .payments import (
-        get_payment_provider,
-        generate_signed_qr_token,
-    )
-    from .serial_bridge import bridge
-    from .vision_gate import vision_scanner
-except ImportError:
-    from db import (
-        init_db,
-        get_lots,
-        get_slots,
-        get_booking,
-        confirm_slot_booking,
-        update_booking_payment,
-    )
-    from schemas import DriverConstraints
-    from orchestrator import run_multi_lot_negotiation
-    from payments import (
-        get_payment_provider,
-        generate_signed_qr_token,
-    )
-    from serial_bridge import bridge
-    from vision_gate import vision_scanner
+from backend.db import (
+    init_db,
+    get_lots,
+    get_slots,
+    get_booking,
+    confirm_slot_booking,
+    update_booking_payment,
+)
+from backend.schemas import DriverConstraints
+from backend.orchestrator import run_multi_lot_negotiation
+from backend.payments import (
+    get_payment_provider,
+    generate_signed_qr_token,
+)
+from backend.serial_bridge import bridge
+from backend.vision_gate import vision_scanner
+from backend.config import FRONTEND_URL
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("main")
@@ -100,7 +83,16 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "http://localhost:8081",
+        "http://127.0.0.1:8081",
+        "http://localhost:19006",
+        FRONTEND_URL,
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -111,7 +103,7 @@ app.add_middleware(
 
 class QRVerifyRequest(BaseModel):
     qr_token: Optional[str] = None
-    frame_b64: Optional[str] = None
+    frame_b64: Optional[str] = Field(None, max_length=15_000_000)
 
 
 class CheckoutRequest(BaseModel):
@@ -125,6 +117,10 @@ class ConfirmRequest(BaseModel):
 class SlotToggleRequest(BaseModel):
     slot_id: str
     occupied: bool
+
+
+# Active background task references to avoid GC / untracked failures
+active_negotiation_tasks: set[asyncio.Task] = set()
 
 
 # --- REST Endpoints ---
@@ -167,7 +163,9 @@ async def start_negotiation(driver: DriverConstraints):
                 "data": {"error": str(e)},
             })
 
-    asyncio.create_task(run_in_background())
+    task = asyncio.create_task(run_in_background())
+    active_negotiation_tasks.add(task)
+    task.add_done_callback(active_negotiation_tasks.discard)
     return {
         "status": "negotiating",
         "driver": driver.model_dump(),
@@ -288,7 +286,7 @@ async def mock_paypal_approve(order_id: str, booking_id: str):
             <p>Order ID: <code>{order_id}</code></p>
             <p>Booking ID: <code>{booking_id}</code></p>
             <p>Simulated payment successful. Return to the dashboard to view your HMAC QR pass.</p>
-            <a href="http://localhost:5173" class="btn">Return to Parking Dashboard</a>
+            <a href="{FRONTEND_URL}" class="btn">Return to Parking Dashboard</a>
         </div>
     </body>
     </html>

@@ -109,7 +109,9 @@ async def test_generate_golden_runs_fixture(tmp_path):
         "recorded_at": "2026-10-15T19:00:00Z",
     }
 
-    golden_path = "frontend/public/golden_runs.json"
+    from pathlib import Path
+    repo_root = Path(__file__).resolve().parent.parent.parent
+    golden_path = repo_root / "frontend" / "public" / "golden_runs.json"
     os.makedirs(os.path.dirname(golden_path), exist_ok=True)
     with open(golden_path, "w", encoding="utf-8") as f:
         json.dump(golden_data, f, indent=2)

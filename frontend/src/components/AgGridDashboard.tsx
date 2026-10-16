@@ -143,8 +143,12 @@ export const AgGridDashboard: React.FC<AgGridDashboardProps> = ({
           <h3 className="text-sm font-bold text-white tracking-wide">Live Inventory (AG Grid Community)</h3>
         </div>
         <div className="flex items-center gap-2 text-xs text-slate-400">
-          <Radio className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-          <span>enableCellChangeFlash Active</span>
+          <Radio
+            className={`w-3.5 h-3.5 ${
+              rowData.length > 0 ? 'text-emerald-400 animate-pulse' : 'text-slate-500'
+            }`}
+          />
+          <span>{rowData.length > 0 ? 'enableCellChangeFlash Active' : 'Waiting for Twin Telemetry...'}</span>
         </div>
       </div>
 
@@ -159,6 +163,9 @@ export const AgGridDashboard: React.FC<AgGridDashboardProps> = ({
           }}
           suppressCellFocus={true}
           animateRows={true}
+          overlayNoRowsTemplate={
+            '<span class="text-slate-400 text-xs">No slots found. Connect gateway or trigger an offline replay.</span>'
+          }
         />
       </div>
     </div>

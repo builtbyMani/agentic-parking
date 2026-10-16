@@ -6,12 +6,8 @@ from typing import Optional, Tuple, Dict, Any
 import cv2
 import numpy as np
 
-try:
-    from .payments import verify_signed_qr_token
-    from .serial_bridge import bridge
-except ImportError:
-    from payments import verify_signed_qr_token
-    from serial_bridge import bridge
+from backend.payments import verify_signed_qr_token
+from backend.serial_bridge import bridge
 
 logger = logging.getLogger("vision_gate")
 

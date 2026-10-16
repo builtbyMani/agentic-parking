@@ -3,12 +3,8 @@ import logging
 from typing import Callable, Optional
 import aiosqlite
 
-try:
-    from .config import ESP32_SERIAL_PORT, DB_PATH
-    from .db import update_slot_sensor
-except ImportError:
-    from config import ESP32_SERIAL_PORT, DB_PATH
-    from db import update_slot_sensor
+from backend.config import ESP32_SERIAL_PORT, DB_PATH
+from backend.db import update_slot_sensor
 
 logger = logging.getLogger("serial_bridge")
 
@@ -93,10 +89,19 @@ class SerialBridge:
                     else:
                         self.event_callback(event)
 
+        elif line in ("GATE:OPENED", "GATE:OPEN"):
+            self.gate_state = "OPEN"
+            if self.event_callback:
+                event = {"event_type": "GATE_OPENED", "data": {"gate_state": "OPEN", "source": "HARDWARE_ESP32"}}
+                if asyncio.iscoroutinefunction(self.event_callback):
+                    await self.event_callback(event)
+                else:
+                    self.event_callback(event)
+
         elif line == "GATE:CLOSED":
             self.gate_state = "CLOSED"
             if self.event_callback:
-                event = {"event_type": "GATE_CLOSED", "data": {"gate_state": "CLOSED"}}
+                event = {"event_type": "GATE_CLOSED", "data": {"gate_state": "CLOSED", "source": "HARDWARE_ESP32"}}
                 if asyncio.iscoroutinefunction(self.event_callback):
                     await self.event_callback(event)
                 else:
