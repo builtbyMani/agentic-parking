@@ -246,8 +246,13 @@ def test_paypal_return_and_cancel_endpoints():
     from backend.payments import MockPaymentProvider
     with TestClient(app) as client:
         with patch("backend.main.get_payment_provider", return_value=MockPaymentProvider()):
-            # 1. PayPal Return callback with valid mock token
-            res_ret = client.get(f"/api/paypal-return?booking_id={bk_id}&token=ORD-RETURN-TEST")
+            # 1. Issue a genuine checkout order first, exactly as the real flow does
+            res_chk = client.post(f"/api/bookings/{bk_id}/checkout")
+            assert res_chk.status_code == 200
+            order_id = res_chk.json()["order_id"]
+
+            # 2. PayPal Return callback with the genuinely issued token
+            res_ret = client.get(f"/api/paypal-return?booking_id={bk_id}&token={order_id}")
             assert res_ret.status_code == 200
             assert "PAYMENT CAPTURED &amp; VERIFIED" in res_ret.text
             assert "Reservation Confirmed!" in res_ret.text

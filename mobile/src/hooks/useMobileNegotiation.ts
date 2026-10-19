@@ -209,10 +209,24 @@ export function useMobileNegotiation(paceMs: number = 1200) {
   // Confirm payment and issue HMAC pass
   const confirmPayment = useCallback(async (bookingId: string) => {
     try {
+      let orderId = 'DEMO_MOBILE_ORDER';
+      try {
+        const chkRes = await fetch(`${API_BASE}/api/bookings/${bookingId}/checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (chkRes.ok) {
+          const chkData = await chkRes.json();
+          orderId = chkData.order_id || orderId;
+        }
+      } catch {
+        // Fall back to direct confirm attempt
+      }
+
       const res = await fetch(`${API_BASE}/api/bookings/${bookingId}/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ order_id: 'DEMO_MOBILE_ORDER' }),
+        body: JSON.stringify({ order_id: orderId }),
       });
       const data = await res.json();
       if (data.qr_token) {

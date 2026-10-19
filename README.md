@@ -76,8 +76,8 @@ flowchart TD
 
 ### 1. Clone & Configure Environment
 ```bash
-git clone https://github.com/your-username/agentic-parking-negotiation.git
-cd agentic-parking-negotiation
+git clone https://github.com/builtbyMani/agentic-parking.git
+cd agentic-parking
 
 # Copy environment template
 cp .env.example .env
@@ -143,6 +143,26 @@ python3 -m pytest -v backend/tests/
 
 ## 🔍 How Judges Can Test & Verify
 
+### Judge Access Options (pick one)
+
+**Option 1 — Zero-config mock mode (default, no accounts needed).**
+Run the Quickstart above as-is. With no PayPal credentials set, the backend uses the built-in mock payment provider: checkout issues a mock order, the mock approval page simulates buyer approval, and confirmation captures it — the full payment → QR → gate flow works end-to-end with zero setup. The mock provider only approves order ids it actually issued, so the adversarial test in Step 4 behaves exactly like the real sandbox path.
+
+**Option 2 — Real PayPal Sandbox (free, ~5 minutes).**
+1. Create a free account at [developer.paypal.com](https://developer.paypal.com/) and open the Developer Dashboard.
+2. Under *Sandbox → Accounts*, PayPal auto-creates a Business and a Personal test account — note the Personal account's email/password (click "View/Edit" if needed).
+3. Under *Apps & Credentials*, create a Sandbox app and copy the **Client ID** and **Secret**.
+4. Put them in `.env`:
+   ```env
+   PAYMENT_MODE=paypal_sandbox
+   PAYPAL_CLIENT_ID=<your_sandbox_client_id>
+   PAYPAL_CLIENT_SECRET=<your_sandbox_client_secret>
+   ```
+5. Restart the backend. "Approve on PayPal Sandbox" now goes to the real sandbox; log in with the Personal test account from step 2 to complete the purchase. No real money moves — sandbox only.
+
+**Option 3 — Hosted demo (Render).**
+The repo ships a `render.yaml` blueprint: fork/clone the repo, connect it in the [Render dashboard](https://dashboard.render.com/), and Render builds and deploys the API automatically (free tier works; first boot can take ~1 minute on a cold start). Set `BACKEND_URL` to your Render service URL so approval redirects land correctly.
+
 ### Step 1: Autonomous Multi-Lot Negotiation
 1. Open **[http://localhost:5173](http://localhost:5173)**.
 2. Adjust driver parameters in the control panel (Max Budget ₹/hr, Max Walking Distance, Duration).
@@ -176,6 +196,7 @@ Verify that payment is a mandatory precondition and cannot be bypassed:
 
 ```bash
 # 1. Attempt to confirm a pending booking with an empty body (should return 400)
+#    (replace any_booking_id with a real pending booking id from Step 2)
 curl -i -X POST http://localhost:8000/api/bookings/any_booking_id/confirm \
      -H "Content-Type: application/json" \
      -d "{}"
@@ -183,11 +204,13 @@ curl -i -X POST http://localhost:8000/api/bookings/any_booking_id/confirm \
 # {"detail": "Missing required order_id. Payment must be initiated and approved before confirmation."}
 
 # 2. Attempt to confirm with a fake or unapproved PayPal order ID (should return 402)
+#    (replace any_booking_id with a real pending booking id from Step 2)
 curl -i -X POST http://localhost:8000/api/bookings/any_booking_id/confirm \
      -H "Content-Type: application/json" \
      -d '{"order_id": "FAKE_ORDER_999"}'
 # Expected Response: HTTP/1.1 402 Payment Required
-# {"detail": "Payment capture failed or order not approved by buyer... Gate pass denied."}
+# {"detail": "Order ID 'FAKE_ORDER_999' does not match the order issued for this booking. Gate pass denied."}
+# (or "No payment order was issued for this booking..." if checkout was skipped)
 ```
 
 ---

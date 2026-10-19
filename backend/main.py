@@ -246,6 +246,22 @@ async def confirm_booking(booking_id: str, req: ConfirmRequest):
             detail="Missing required order_id. Payment must be initiated and approved before confirmation.",
         )
 
+    # Bind the order to this booking: confirmation requires a checkout first,
+    # and the presented order id must be the one issued for this booking.
+    # Anything else (fabricated id, or an id issued for another booking) is
+    # rejected as forged — payment can never be bypassed or borrowed.
+    recorded_order_id = booking.get("paypal_order_id")
+    if not recorded_order_id:
+        raise HTTPException(
+            status_code=402,
+            detail="No payment order was issued for this booking. Complete checkout first. Gate pass denied.",
+        )
+    if order_id != recorded_order_id:
+        raise HTTPException(
+            status_code=402,
+            detail=f"Order ID '{order_id}' does not match the order issued for this booking. Gate pass denied.",
+        )
+
     provider = get_payment_provider()
     try:
         capture_res = await provider.capture_order(order_id)
@@ -318,6 +334,19 @@ async def paypal_return(
 
     if not effective_order_id:
         raise HTTPException(status_code=400, detail="Missing order ID token in PayPal return callback")
+
+    # Same order-to-booking binding as /confirm: reject forged return tokens.
+    recorded_order_id = booking.get("paypal_order_id")
+    if not recorded_order_id:
+        raise HTTPException(
+            status_code=402,
+            detail="No payment order was issued for this booking. Complete checkout first. Gate pass denied.",
+        )
+    if effective_order_id != recorded_order_id:
+        raise HTTPException(
+            status_code=402,
+            detail=f"Order ID '{effective_order_id}' does not match the order issued for this booking. Gate pass denied.",
+        )
 
     provider = get_payment_provider()
     # Check if already confirmed (idempotent)

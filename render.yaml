@@ -1,0 +1,29 @@
+# Render Blueprint — one-click deploy of the Agentic Parking FastAPI backend.
+# In the Render dashboard: New > Blueprint > connect this repo.
+# Free tier works; expect ~1 minute cold start on first boot.
+services:
+  - type: web
+    name: agentic-parking-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PAYMENT_MODE
+        value: mock
+      - key: LLM_MODE
+        value: mock_adversarial
+      - key: FRONTEND_URL
+        value: http://localhost:5173
+      # Set BACKEND_URL to this service's public URL after first deploy so
+      # PayPal approval redirects and mock-approve links resolve correctly.
+      # - key: BACKEND_URL
+      #   value: https://agentic-parking-api.onrender.com
+      # Optional — real PayPal Sandbox (see README "Judge Access Options"):
+      # - key: PAYPAL_CLIENT_ID
+      #   sync: false
+      # - key: PAYPAL_CLIENT_SECRET
+      #   sync: false
+      # Recommended for any public deployment:
+      # - key: HMAC_SECRET_KEY
+      #   generateValue: true

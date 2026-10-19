@@ -109,11 +109,18 @@ class PayPalSandboxProvider:
             return resp.json()
 
 
+# Registry of order ids actually issued by the mock provider in this process.
+# capture_order only approves ids from this set, so fabricated order ids
+# (e.g. "FAKE_ORDER_999") are rejected exactly like an unapproved PayPal order.
+_MOCK_ISSUED_ORDER_IDS: set = set()
+
+
 class MockPaymentProvider:
     async def create_order(self, booking_id: str, total_paise: int) -> dict:
         usd_cents = paise_to_usd_cents(total_paise)
         usd_value = cents_to_usd_str(usd_cents)
         order_id = f"MOCK-ORD-{uuid.uuid4().hex[:8].upper()}"
+        _MOCK_ISSUED_ORDER_IDS.add(order_id)
         approve_url = f"{BACKEND_URL}/api/mock-paypal-approve?order_id={order_id}&booking_id={booking_id}"
         return {
             "provider": "MOCK",
@@ -124,6 +131,13 @@ class MockPaymentProvider:
         }
 
     async def capture_order(self, order_id: str) -> dict:
+        if order_id not in _MOCK_ISSUED_ORDER_IDS:
+            return {
+                "status": "FAILED",
+                "order_id": order_id,
+                "provider": "MOCK",
+                "reason": "Unknown order id: no such mock order was issued by this provider",
+            }
         return {
             "status": "COMPLETED",
             "order_id": order_id,
