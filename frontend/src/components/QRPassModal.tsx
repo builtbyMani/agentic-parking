@@ -67,7 +67,7 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
             setErrorMessage(null);
           }
         }
-      } catch (e) {
+      } catch {
         // Silently continue
       }
     }, 2500);
@@ -126,42 +126,42 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-lg w-full p-6 shadow-2xl text-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-editorial-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-[#FAF8F5] border border-[#DFD9CE] rounded-3xl max-w-lg w-full p-6 shadow-2xl text-editorial-800 relative animate-in fade-in zoom-in-95 duration-200">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition"
+          className="absolute top-5 right-5 text-editorial-500 hover:text-editorial-800 p-1 rounded-full hover:bg-ivory-100 transition"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Title */}
-        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-800">
-          <QrCode className="w-6 h-6 text-emerald-400" />
-          <h2 className="text-lg font-bold text-white">Parking Reservation Pass</h2>
+        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#DFD9CE]">
+          <QrCode className="w-6 h-6 text-coral-500" />
+          <h2 className="text-base font-extrabold text-editorial-800 tracking-tight">Parking Access Gate Pass</h2>
         </div>
 
         {/* Reservation Card */}
-        <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 mb-5">
+        <div className="bg-white border border-[#DFD9CE] rounded-2xl p-4 mb-5 shadow-xs">
           <div className="flex justify-between items-start mb-2">
             <div>
-              <h3 className="font-bold text-white text-base">{winner.name}</h3>
-              <p className="text-xs text-slate-400 font-mono mt-0.5">Booking ID: {winner.booking_id}</p>
+              <h3 className="font-extrabold text-editorial-800 text-base">{winner.name}</h3>
+              <p className="text-xs text-editorial-600 font-mono mt-0.5">Booking ID: {winner.booking_id}</p>
             </div>
-            <span className="text-xs font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-700 px-2 py-0.5 rounded">
+            <span className="text-xs font-mono font-extrabold bg-coral-50 text-coral-600 border border-coral-200 px-2.5 py-0.5 rounded-full">
               Slot {winner.slot_id}
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-slate-800/80 mt-2">
+          <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-[#DFD9CE]/70 mt-2">
             <div>
-              <span className="text-slate-400">Agreed Rate:</span>
-              <p className="font-semibold text-white">₹{winner.agreed_rate_rupees}/hr</p>
+              <span className="text-editorial-600 font-medium">Agreed Rate:</span>
+              <p className="font-extrabold text-editorial-800">₹{winner.agreed_rate_rupees}/hr</p>
             </div>
             <div>
-              <span className="text-slate-400">Total Settlement:</span>
-              <p className="font-semibold text-emerald-400">
+              <span className="text-editorial-600 font-medium">Total Settlement:</span>
+              <p className="font-extrabold text-coral-600">
                 ₹{winner.total_rupees} ({winner.usd_display} USD)
               </p>
             </div>
@@ -171,18 +171,18 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
         {/* Step 1: PayPal Checkout */}
         {!qrToken ? (
           <div className="space-y-4">
-            <div className="bg-sky-950/30 border border-sky-800/40 rounded-xl p-4 text-xs text-sky-200">
-              <div className="flex items-center gap-2 font-bold text-sky-400 mb-1">
-                <ShieldCheck className="w-4 h-4" />
+            <div className="bg-editorial-50 border border-editorial-200 rounded-2xl p-4 text-xs text-editorial-800">
+              <div className="flex items-center gap-2 font-bold text-editorial-700 mb-1">
+                <ShieldCheck className="w-4 h-4 text-editorial-500" />
                 <span>Zero-LLM Financial Boundary (PayPal v2 Sandbox)</span>
               </div>
-              <p>
+              <p className="text-editorial-600 font-medium">
                 Calculated strictly in Python: total integer paise is converted to USD cents (${winner.usd_display}) with 0 float drift.
               </p>
             </div>
 
             {loading ? (
-              <div className="py-6 text-center text-slate-400 text-sm animate-pulse">
+              <div className="py-6 text-center text-editorial-600 text-sm animate-pulse font-medium">
                 Setting up secure PayPal Sandbox session...
               </div>
             ) : (
@@ -192,7 +192,7 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
                     href={checkoutData.approve_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="bg-[#0070ba] hover:bg-[#005ea6] text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm shadow-lg transition active:scale-95"
+                    className="bg-[#0070ba] hover:bg-[#005ea6] text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-xs shadow-md transition active:scale-95"
                   >
                     <span>Approve on PayPal Sandbox</span>
                     <ExternalLink className="w-4 h-4" />
@@ -201,15 +201,15 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
 
                 <button
                   onClick={handleConfirmPayment}
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm shadow-lg transition active:scale-95"
+                  className="bg-coral-500 hover:bg-coral-600 text-white font-extrabold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-xs shadow-md shadow-coral-500/20 transition active:scale-95"
                 >
                   <Sparkles className="w-4 h-4" />
-                  <span>Confirm Payment & Issue Signed QR Pass</span>
+                  <span>Confirm Payment &amp; Issue Signed QR Pass</span>
                 </button>
 
                 {errorMessage && (
-                  <div className="bg-rose-950/70 border border-rose-700 text-rose-200 text-xs p-3 rounded-lg flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                  <div className="bg-rose-50 border border-rose-300 text-rose-800 text-xs p-3 rounded-xl flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                     <span>{errorMessage}</span>
                   </div>
                 )}
@@ -219,23 +219,23 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
         ) : (
           /* Step 2: Digital Access QR Pass */
           <div className="flex flex-col items-center space-y-4 animate-in fade-in zoom-in-95 duration-200">
-            <div className="bg-white p-4 rounded-2xl shadow-2xl border-4 border-emerald-500">
+            <div className="bg-white p-4 rounded-3xl shadow-xl border-4 border-coral-500">
               <QRCodeSVG value={qrToken} size={180} level="M" />
             </div>
 
-            <div className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-center">
-              <div className="flex items-center justify-center gap-1.5 text-xs text-emerald-400 font-bold mb-1">
+            <div className="w-full bg-white border border-[#DFD9CE] rounded-2xl p-3 text-center shadow-xs">
+              <div className="flex items-center justify-center gap-1.5 text-xs text-coral-600 font-bold mb-1">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Cryptographic HMAC-SHA256 Signed Pass</span>
               </div>
-              <p className="text-[11px] text-slate-400 font-mono break-all px-2">
+              <p className="text-[11px] text-editorial-600 font-mono break-all px-2">
                 Token: {qrToken.substring(0, 32)}...
               </p>
             </div>
 
             <button
               onClick={handlePresentToGate}
-              className="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+              className="w-full bg-editorial-800 hover:bg-editorial-900 text-white font-extrabold py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md transition active:scale-95"
             >
               <QrCode className="w-4 h-4" />
               <span>Present to Physical Vision Gate</span>
@@ -243,12 +243,12 @@ export const QRPassModal: React.FC<QRPassModalProps> = ({ winner, isOpen, onClos
 
             {gateFeedback && (
               <div
-                className={`w-full py-2.5 px-3 rounded-lg text-xs font-semibold text-center border ${
+                className={`w-full py-2.5 px-3 rounded-xl text-xs font-semibold text-center border ${
                   gateFeedback.includes('GRANTED')
-                    ? 'bg-emerald-950/70 border-emerald-600 text-emerald-200'
+                    ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
                     : gateFeedback.includes('cooldown') || gateFeedback.includes('Valid')
-                    ? 'bg-amber-950/70 border-amber-600 text-amber-200'
-                    : 'bg-rose-950/70 border-rose-600 text-rose-200'
+                    ? 'bg-amber-50 border-amber-300 text-amber-800'
+                    : 'bg-rose-50 border-rose-300 text-rose-800'
                 }`}
               >
                 {gateFeedback}

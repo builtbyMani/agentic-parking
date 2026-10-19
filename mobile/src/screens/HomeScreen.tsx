@@ -8,8 +8,8 @@ import {
   TextInput,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import Svg, { Path, Circle, Rect, Line, G } from 'react-native-svg';
 import { Header } from '../components/Header';
-import { OfferConvergenceChart } from '../components/OfferConvergenceChart';
 import { colors, radii, shadows } from '../theme';
 import { DriverConstraints } from '../types';
 
@@ -47,33 +47,145 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-      {/* Screen Header */}
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
+    >
+      {/* Screen 1 Header */}
       <Header
-        title="Parking"
-        subtitleBold="Autonomous Rates"
-        subtitleLight="below public list price"
-        onPlusPress={handleStart}
-        onArrowPress={onGoToPass}
+        greeting="Good Morning"
+        userName="John Abraham"
+        title="Let's Find"
+        highlightWord="Parking"
+        subtitle="near You"
+        onSearchPress={handleStart}
         statusBadge={isPacing ? 'Bidding...' : 'AI Ready'}
       />
 
-      {/* Main Hero Card (Large White Card) */}
-      <View style={[styles.heroCard, shadows.card]}>
-        <View style={styles.heroTopRow}>
-          <View>
-            <Text style={styles.cardEyebrow}>Target Rate</Text>
-            <Text style={styles.heroPrice}>₹36.00 <Text style={styles.heroPriceUnit}>/ hr</Text></Text>
-          </View>
-          <View style={styles.discountPill}>
-            <Text style={styles.discountText}>-20% SAVED</Text>
+      {/* Map & Route Card with 450m Badge */}
+      <View style={[styles.mapCard, shadows.card]}>
+        <Svg width="100%" height={210} viewBox="0 0 340 210" style={styles.mapSvg}>
+          {/* Stylized warm ivory road networks */}
+          <Path
+            d="M-30 80 Q 90 95 160 50 T 370 40"
+            fill="none"
+            stroke="#DFD9CE"
+            strokeWidth="32"
+            strokeLinecap="round"
+          />
+          <Path
+            d="M 50 230 Q 110 140 170 120 T 360 80"
+            fill="none"
+            stroke="#DFD9CE"
+            strokeWidth="28"
+            strokeLinecap="round"
+          />
+          <Path
+            d="M-10 170 Q 120 180 220 220"
+            fill="none"
+            stroke="#DFD9CE"
+            strokeWidth="20"
+            strokeLinecap="round"
+          />
+
+          {/* Navigation route trajectory line */}
+          <Path
+            d="M 100 155 C 110 95, 140 75, 195 95"
+            fill="none"
+            stroke={colors.editorialDark}
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+
+          {/* Start point dot */}
+          <Circle cx="100" cy="155" r="4.5" fill={colors.editorialDark} />
+
+          {/* Target destination point */}
+          <Circle cx="195" cy="95" r="6" fill={colors.coralOrange} stroke="#FFFFFF" strokeWidth="2.5" />
+        </Svg>
+
+        {/* Floating 450 m Distance Pill */}
+        <View style={styles.distancePill}>
+          <View style={styles.distanceDot} />
+          <Text style={styles.distanceText}>450 m</Text>
+        </View>
+
+        {/* Map Zoom Controls */}
+        <View style={styles.mapControls}>
+          <TouchableOpacity style={styles.zoomBtn} activeOpacity={0.7}>
+            <Text style={styles.zoomBtnText}>+</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.zoomBtn} activeOpacity={0.7}>
+            <Text style={styles.zoomBtnText}>−</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Featured Lot Card (Vivid Coral Orange with Overlapping 9 Available Pill) */}
+      <View style={[styles.coralCard, shadows.cardStacked]}>
+        {/* Overlapping Frosted Badge */}
+        <View style={styles.availableBadge}>
+          <Text style={styles.availableBadgeText}>9 Available</Text>
+        </View>
+
+        {/* Micro Parking Layout Preview */}
+        <View style={styles.microBayContainer}>
+          <View style={styles.microBayRow}>
+            {/* Slot 1: Car parked */}
+            <View style={styles.microSlot}>
+              <View style={[styles.microCar, { backgroundColor: '#FFFFFF' }]} />
+              <Text style={styles.microSlotText}>01</Text>
+            </View>
+
+            {/* Slot 2: Empty/Available */}
+            <View style={[styles.microSlot, styles.microSlotEmpty]}>
+              <Text style={styles.microSlotText}>02</Text>
+            </View>
+
+            {/* Slot 3: Car parked */}
+            <View style={styles.microSlot}>
+              <View style={[styles.microCar, { backgroundColor: colors.editorialDark }]} />
+              <Text style={styles.microSlotText}>03</Text>
+            </View>
+
+            {/* Slot 4: Empty */}
+            <View style={[styles.microSlot, styles.microSlotEmpty]}>
+              <Text style={styles.microSlotText}>04</Text>
+            </View>
+
+            {/* Slot 5: Car parked */}
+            <View style={styles.microSlot}>
+              <View style={[styles.microCar, { backgroundColor: '#FFFFFF' }]} />
+              <Text style={styles.microSlotText}>05</Text>
+            </View>
           </View>
         </View>
 
-        {/* Minimal Convergence Trajectory Chart */}
-        <OfferConvergenceChart currentOfferRupees={36} />
+        {/* Lot Title & Round Arrow CTA */}
+        <View style={styles.lotFooterRow}>
+          <View>
+            <Text style={styles.lotTitle}>37th Avenue Parking</Text>
+            <Text style={styles.lotSubtitle}>₹36/hr · Dual-Agent Autonomous</Text>
+          </View>
 
-        {/* Driver Constraint Inline Editor */}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={handleStart}
+            style={styles.arrowButton}
+          >
+            <Feather name="arrow-up-right" size={20} color={colors.coralOrange} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Driver Constraints Editor Card */}
+      <View style={[styles.configCard, shadows.card]}>
+        <View style={styles.configHeader}>
+          <Text style={styles.configTitle}>Driver Bidding Preferences</Text>
+          <Text style={styles.configBadge}>Policy-Guarded</Text>
+        </View>
+
         <View style={styles.constraintsRow}>
           {/* Budget */}
           <View style={styles.constraintItem}>
@@ -124,21 +236,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             onPress={() => setPrepay(!prepay)}
             style={[styles.prepayPill, prepay && styles.prepayPillActive]}
           >
-            <Feather name={prepay ? 'check' : 'tag'} size={12} color={prepay ? '#FFFFFF' : colors.textSecondary} />
+            <Feather name={prepay ? 'check' : 'tag'} size={11} color={prepay ? '#FFFFFF' : colors.textSecondary} />
             <Text style={[styles.prepayText, prepay && styles.prepayTextActive]}>Prepay</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Big Action Button */}
+        {/* Primary Action Button */}
         <TouchableOpacity
           activeOpacity={0.85}
           disabled={isPacing}
           onPress={handleStart}
-          style={[styles.primaryButton, shadows.button]}
+          style={[styles.primaryButton, shadows.coralButton]}
         >
-          <Feather name="play" size={16} color="#FFFFFF" />
+          <Feather name="play" size={15} color="#FFFFFF" />
           <Text style={styles.primaryButtonText}>
-            {isPacing ? 'Autonomous Bidding in Progress...' : 'Start Autonomous Negotiation'}
+            {isPacing ? 'Bidding in Progress...' : 'Start Autonomous Negotiation'}
           </Text>
         </TouchableOpacity>
 
@@ -151,46 +263,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           }}
           style={styles.replayButton}
         >
-          <Feather name="rotate-ccw" size={14} color={colors.textSecondary} />
+          <Feather name="rotate-ccw" size={13} color={colors.textSecondary} />
           <Text style={styles.replayButtonText}>Replay Golden Run (Offline Demo)</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Split Metric Cards (Income / Expense style from image) */}
-      <View style={styles.splitRow}>
-        <View style={[styles.splitCard, shadows.card]}>
-          <View style={styles.splitIconRow}>
-            <Text style={styles.splitLabel}>Reservation Cap</Text>
-            <Feather name="arrow-up-right" size={16} color={colors.textMuted} />
-          </View>
-          <Text style={styles.splitValue}>₹{budgetRupees}.00</Text>
-          <Text style={styles.splitSub}>Driver hidden limit</Text>
+      {/* Safety & Anti-Hallucination Indicator */}
+      <View style={[styles.policyCard, shadows.card]}>
+        <View style={styles.policyIconCircle}>
+          <Feather name="shield" size={16} color={colors.editorialBlue} />
         </View>
-
-        <View style={[styles.splitCard, shadows.card]}>
-          <View style={styles.splitIconRow}>
-            <Text style={styles.splitLabel}>Policy Floor</Text>
-            <Feather name="shield" size={16} color={colors.textMuted} />
-          </View>
-          <Text style={styles.splitValue}>₹30.00</Text>
-          <Text style={styles.splitSub}>Owner minimum floor</Text>
-        </View>
-      </View>
-
-      {/* Your Activity / Safety Guard Card */}
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Agent Policy Status</Text>
-        <Text style={styles.sectionLink}>Active</Text>
-      </View>
-
-      <View style={[styles.activityCard, shadows.card]}>
-        <View style={styles.activityIconCircle}>
-          <Feather name="shield" size={18} color={colors.primary} />
-        </View>
-        <View style={styles.activityContent}>
-          <Text style={styles.activityTitle}>7 Anti-Hallucination Barriers</Text>
-          <Text style={styles.activityText}>
-            Integer paise precision, PolicyGuard floor clamp, monotonic counters, and zero-LLM payment calculations active.
+        <View style={styles.policyTextWrap}>
+          <Text style={styles.policyTitle}>7 Deterministic Security Barriers</Text>
+          <Text style={styles.policyDesc}>
+            Integer paise precision, PolicyGuard floor enforcement, and zero-LLM payment calculation.
           </Text>
         </View>
       </View>
@@ -204,69 +290,237 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   contentContainer: {
-    paddingBottom: 20,
+    paddingBottom: 24,
   },
-  heroCard: {
-    backgroundColor: colors.surface,
+
+  // Map & Route card
+  mapCard: {
+    backgroundColor: '#FAF8F5',
     borderRadius: radii.card,
     marginHorizontal: 18,
-    padding: 22,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    marginBottom: 16,
+    height: 210,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    overflow: 'hidden',
+    position: 'relative',
+    marginBottom: -24,
   },
-  heroTopRow: {
+  mapSvg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  distancePill: {
+    position: 'absolute',
+    top: 36,
+    right: 28,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  cardEyebrow: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.textSecondary,
-    marginBottom: 4,
-  },
-  heroPrice: {
-    fontSize: 34,
-    fontWeight: '900',
-    color: colors.textPrimary,
-    letterSpacing: -0.8,
-  },
-  heroPriceUnit: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.textSecondary,
-  },
-  discountPill: {
-    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.92)',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    shadowColor: colors.editorialDark,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  discountText: {
+  distanceDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.editorialBlue,
+    marginRight: 6,
+  },
+  distanceText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: colors.editorialDark,
+  },
+  mapControls: {
+    position: 'absolute',
+    right: 14,
+    bottom: 34,
+    flexDirection: 'column',
+    gap: 6,
+  },
+  zoomBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: colors.editorialDark,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  zoomBtnText: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: colors.editorialDark,
+  },
+
+  // Featured Coral Orange Card
+  coralCard: {
+    backgroundColor: colors.coralOrange,
+    borderRadius: radii.card,
+    marginHorizontal: 18,
+    padding: 20,
+    position: 'relative',
+    marginBottom: 16,
+    zIndex: 10,
+  },
+  availableBadge: {
+    position: 'absolute',
+    top: -12,
+    left: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+    paddingHorizontal: 12,
+    paddingVertical: 3,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    shadowColor: colors.coralOrange,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  availableBadgeText: {
     fontSize: 10,
     fontWeight: '800',
-    color: colors.primary,
+    color: colors.coralOrange,
     letterSpacing: 0.3,
+  },
+  microBayContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    borderRadius: radii.cardSmall,
+    padding: 10,
+    marginTop: 4,
+    marginBottom: 14,
+  },
+  microBayRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  microSlot: {
+    width: 32,
+    height: 52,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 2,
+  },
+  microSlotEmpty: {
+    borderStyle: 'dashed',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+  },
+  microCar: {
+    width: 22,
+    height: 34,
+    borderRadius: 5,
+    marginBottom: 2,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+  },
+  microSlotText: {
+    fontSize: 7,
+    fontWeight: '700',
+    color: 'rgba(255, 255, 255, 0.9)',
+  },
+  lotFooterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  lotTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: -0.4,
+  },
+  lotSubtitle: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: colors.coralMuted,
+    marginTop: 1,
+  },
+  arrowButton: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+
+  // Driver Constraints Config
+  configCard: {
+    backgroundColor: '#FAF8F5',
+    borderRadius: radii.card,
+    marginHorizontal: 18,
+    padding: 18,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    marginBottom: 14,
+  },
+  configHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  configTitle: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: colors.editorialDark,
+    letterSpacing: -0.2,
+  },
+  configBadge: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: colors.editorialBlue,
+    backgroundColor: colors.editorialLight,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: radii.pill,
   },
   constraintsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: colors.surfaceSubtle,
+    backgroundColor: '#FFFFFF',
     borderRadius: radii.cardSmall,
-    padding: 12,
-    marginTop: 4,
-    marginBottom: 16,
+    padding: 10,
     borderWidth: 1,
     borderColor: colors.border,
+    marginBottom: 14,
   },
   constraintItem: {
+    flex: 1,
     alignItems: 'center',
   },
   constraintLabel: {
     fontSize: 10,
-    color: colors.textMuted,
+    color: colors.textSecondary,
     fontWeight: '600',
     marginBottom: 2,
   },
@@ -275,40 +529,40 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   currencySymbol: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700',
     color: colors.textPrimary,
   },
   numericInput: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '800',
     color: colors.textPrimary,
-    paddingVertical: 0,
     minWidth: 26,
     textAlign: 'center',
+    padding: 0,
   },
   constraintUnit: {
     fontSize: 10,
     fontWeight: '600',
-    color: colors.textMuted,
+    color: colors.textSecondary,
   },
   prepayPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 10,
+    gap: 3,
+    backgroundColor: '#FAF8F5',
+    paddingHorizontal: 8,
     paddingVertical: 6,
     borderRadius: radii.pill,
-    backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: colors.border,
   },
   prepayPillActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    backgroundColor: colors.editorialDark,
+    borderColor: colors.editorialDark,
   },
   prepayText: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '700',
     color: colors.textSecondary,
   },
@@ -320,14 +574,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: colors.blackPure,
-    borderRadius: radii.button,
+    backgroundColor: colors.coralOrange,
     paddingVertical: 14,
+    borderRadius: radii.button,
+    marginBottom: 8,
   },
   primaryButtonText: {
     color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 13,
+    fontWeight: '800',
     letterSpacing: -0.2,
   },
   replayButton: {
@@ -335,99 +590,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    marginTop: 10,
-    paddingVertical: 6,
+    paddingVertical: 8,
   },
   replayButtonText: {
-    color: colors.textSecondary,
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  splitRow: {
-    flexDirection: 'row',
-    marginHorizontal: 18,
-    gap: 12,
-    marginBottom: 20,
-  },
-  splitCard: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-  },
-  splitIconRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  splitLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
     color: colors.textSecondary,
   },
-  splitValue: {
-    fontSize: 22,
-    fontWeight: '900',
-    color: colors.textPrimary,
-    letterSpacing: -0.4,
-  },
-  splitSub: {
-    fontSize: 10,
-    color: colors.textMuted,
-    marginTop: 2,
-  },
-  sectionHeader: {
+
+  // Security Policy card
+  policyCard: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 22,
-    marginBottom: 10,
-  },
-  sectionTitle: {
-    fontSize: 17,
-    fontWeight: '800',
-    color: colors.textPrimary,
-    letterSpacing: -0.3,
-  },
-  sectionLink: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: colors.primary,
-  },
-  activityCard: {
-    flexDirection: 'row',
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
+    backgroundColor: '#FAF8F5',
+    borderRadius: radii.cardSmall,
     marginHorizontal: 18,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    alignItems: 'flex-start',
+    padding: 12,
+    borderWidth: 1.5,
+    borderColor: colors.border,
     gap: 12,
   },
-  activityIconCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: colors.primaryLight,
+  policyIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.editorialLight,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  activityContent: {
+  policyTextWrap: {
     flex: 1,
   },
-  activityTitle: {
-    fontSize: 14,
+  policyTitle: {
+    fontSize: 11,
     fontWeight: '800',
-    color: colors.textPrimary,
-    marginBottom: 3,
+    color: colors.editorialDark,
   },
-  activityText: {
-    fontSize: 12,
-    lineHeight: 17,
+  policyDesc: {
+    fontSize: 10,
     color: colors.textSecondary,
+    lineHeight: 14,
+    marginTop: 1,
   },
 });

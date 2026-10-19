@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic Parking — Warm Ivory & Editorial Blue Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ivory: {
+              50: '#FAF8F5',
+              100: '#F5F2EB',
+              200: '#EAE6DE',
+              300: '#DFD9CE',
+              400: '#C7BFB1'
+            },
+            editorial: {
+              50: '#EAF3FA',
+              100: '#C9E0F2',
+              500: '#226192',
+              600: '#1B4E76',
+              800: '#112E46',
+              900: '#0B1E2E'
+            },
+            coral: {
+              50: '#FDF1EE',
+              100: '#FCE0D9',
+              500: '#EF5537',
+              600: '#D94528',
+              700: '#BA371E'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"Space Grotesk"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #EAE6DE;
+      color: #112E46;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+    .phone-mockup {
+      width: 375px;
+      height: 780px;
+      border-radius: 44px;
+      border: 9px solid #112E46;
+      box-shadow: 0 25px 60px -15px rgba(17, 46, 70, 0.25), 0 0 0 1px rgba(17, 46, 70, 0.08);
+      position: relative;
+      overflow: hidden;
+      background: #FAF8F5;
+      display: flex;
+      flex-direction: column;
+    }
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 24px;
+      background: #112E46;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+      z-index: 50;
+    }
+    .frosted-glass {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .perspective-grid {
+      transform: perspective(600px) rotateX(48deg);
+      transform-origin: bottom center;
+    }
+  </style>
+</head>
+<body class="p-6 md:p-12 antialiased selection:bg-coral-500 selection:text-white">
+
+  <!-- Top Hero Header -->
+  <header class="max-w-6xl mx-auto mb-10">
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-ivory-300 pb-6">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="inline-block w-3 h-3 rounded-full bg-coral-500 animate-pulse"></span>
+          <span class="text-xs uppercase tracking-widest font-bold text-editorial-500">Design Contract · GSD Sketch</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-editorial-800 tracking-tight">
+          Warm Ivory &amp; Deep Editorial Blue
+        </h1>
+        <p class="text-sm md:text-base text-editorial-600 mt-1">
+          Adapted tactile mobile UI: 3-screen progression matching parking discovery, architectural bay grid with radial dial, and 3D access gate pass.
+        </p>
+      </div>
+
+      <!-- Color Palette Swatches -->
+      <div class="flex items-center gap-3 bg-white/70 p-2.5 rounded-2xl border border-ivory-300 shadow-sm">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-[#EAE6DE] border border-ivory-300 shadow-inner"></div>
+          <div class="text-[11px] leading-tight font-medium">
+            <span class="block font-bold">Warm Ivory</span>
+            <span class="text-gray-500 font-mono">#EAE6DE</span>
+          </div>
+        </div>
+        <div class="w-px h-6 bg-ivory-300"></div>
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-[#226192] shadow-sm"></div>
+          <div class="text-[11px] leading-tight font-medium">
+            <span class="block font-bold">Editorial Blue</span>
+            <span class="text-gray-500 font-mono">#226192</span>
+          </div>
+        </div>
+        <div class="w-px h-6 bg-ivory-300"></div>
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-[#EF5537] shadow-sm"></div>
+          <div class="text-[11px] leading-tight font-medium">
+            <span class="block font-bold">Coral Orange</span>
+            <span class="text-gray-500 font-mono">#EF5537</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3 Screens Preview Container -->
+  <main class="max-w-6xl mx-auto flex flex-wrap justify-center gap-8 lg:gap-10 mb-14">
+
+    <!-- SCREEN 1: Discovery & Route Map -->
+    <div class="flex flex-col items-center">
+      <div class="text-xs uppercase font-mono tracking-wider font-bold text-editorial-600 mb-2">Screen 1 · Discovery &amp; Route</div>
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+
+        <!-- Status bar -->
+        <div class="pt-2 px-6 flex justify-between text-[11px] font-bold text-editorial-800 z-40">
+          <span>9:41</span>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l.64-.64C7.93 20.26 9.88 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+            <span class="font-mono">78%</span>
+          </div>
+        </div>
+
+        <!-- Top Profile Row -->
+        <div class="px-5 pt-3 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-full bg-editorial-500 text-white flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-white">
+              JA
+            </div>
+            <div>
+              <div class="text-[10px] text-editorial-600 font-medium">Good Morning</div>
+              <div class="text-xs font-bold text-editorial-800">John Abraham</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-editorial-800 hover:bg-ivory-100">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            </button>
+            <button class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-editorial-800 hover:bg-ivory-100">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Editorial Title -->
+        <div class="px-5 pt-3">
+          <h2 class="text-xl font-light text-editorial-800 tracking-tight leading-tight">
+            Let's Find <span class="font-extrabold text-editorial-800">Parking</span>
+          </h2>
+          <div class="text-xs text-editorial-500 font-medium">near You</div>
+        </div>
+
+        <!-- Map Trajectory Canvas -->
+        <div class="relative flex-1 mt-2 mx-4 rounded-3xl overflow-hidden bg-[#E5E0D6] border border-ivory-300">
+          <!-- Subtle map roads -->
+          <svg class="absolute inset-0 w-full h-full opacity-60" viewBox="0 0 340 320">
+            <path d="M-20 80 Q 120 100 180 40 T 360 30" fill="none" stroke="#D3CDC2" stroke-width="26" />
+            <path d="M60 340 Q 90 200 160 170 T 320 120" fill="none" stroke="#D3CDC2" stroke-width="22" />
+            <path d="M-20 220 Q 140 240 240 300" fill="none" stroke="#D3CDC2" stroke-width="18" />
+            <!-- Route trajectory line -->
+            <path d="M 120 180 C 130 110, 150 90, 200 120" fill="none" stroke="#112E46" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="2 0" />
+            <!-- Pin target -->
+            <circle cx="120" cy="180" r="5" fill="#EF5537" stroke="#FFFFFF" stroke-width="2" />
+          </svg>
+
+          <!-- 450 m Distance Pill Floating -->
+          <div class="absolute top-20 right-8 frosted-glass px-3 py-1.5 rounded-full shadow-lg border border-white/60 flex items-center gap-1.5 z-20">
+            <div class="w-2 h-2 rounded-full bg-editorial-500"></div>
+            <span class="text-xs font-extrabold text-editorial-800 font-mono">450 m</span>
+          </div>
+
+          <!-- Floating Zoom Controls -->
+          <div class="absolute right-3 bottom-4 flex flex-col gap-1.5 z-20">
+            <button class="w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center font-bold text-editorial-800 text-sm">+</button>
+            <button class="w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center font-bold text-editorial-800 text-sm">−</button>
+          </div>
+        </div>
+
+        <!-- Bottom Featured Lot Card (Vivid Coral Orange) -->
+        <div class="relative mx-4 -mt-10 mb-4 bg-coral-500 rounded-3xl p-4 text-white shadow-xl">
+          <!-- Frosted Overlapping Badge -->
+          <div class="absolute -top-3 left-6 frosted-glass text-coral-600 px-3 py-0.5 rounded-full text-[10px] font-bold shadow-md border border-white/80">
+            9 Available
+          </div>
+
+          <!-- Micro Parking Bay Graphic -->
+          <div class="bg-white/20 rounded-2xl p-2.5 backdrop-blur-sm mb-3">
+            <div class="grid grid-cols-5 gap-1.5 items-center justify-items-center py-1">
+              <div class="w-4 h-7 rounded bg-white shadow-xs"></div>
+              <div class="w-4 h-7 rounded border border-white/40 border-dashed"></div>
+              <div class="w-4 h-7 rounded bg-editorial-800 shadow-xs"></div>
+              <div class="w-4 h-7 rounded border border-white/40 border-dashed"></div>
+              <div class="w-4 h-7 rounded bg-white shadow-xs"></div>
+            </div>
+          </div>
+
+          <!-- Title & Arrow CTA -->
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm font-extrabold tracking-tight">37th Avenue Parking</div>
+              <div class="text-[11px] text-coral-100 font-medium">₹35/hr · AI Auto-Negotiated</div>
+            </div>
+            <button class="w-10 h-10 rounded-full bg-white text-coral-500 flex items-center justify-center font-extrabold shadow-md hover:scale-105 transition-transform">
+              ↗
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: Bay Grid & Radial Closing Timer -->
+    <div class="flex flex-col items-center">
+      <div class="text-xs uppercase font-mono tracking-wider font-bold text-editorial-600 mb-2">Screen 2 · Bay Grid &amp; Timer Dial</div>
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+
+        <!-- Status bar -->
+        <div class="pt-2 px-6 flex justify-between text-[11px] font-bold text-editorial-800 z-40">
+          <span>9:41</span>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l.64-.64C7.93 20.26 9.88 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
+            <span class="font-mono">78%</span>
+          </div>
+        </div>
+
+        <!-- Top Controls Bar -->
+        <div class="px-5 pt-3 flex items-center justify-between">
+          <button class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-editorial-800">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+          </button>
+          <div class="frosted-glass px-3 py-1 rounded-full border border-ivory-300 text-[11px] font-bold text-editorial-800 shadow-xs flex items-center gap-1">
+            <span>⇋</span> Left Side
+          </div>
+        </div>
+
+        <!-- Architectural Bay Grid (Top Down) -->
+        <div class="mx-4 mt-3 bg-white rounded-3xl p-3 border border-ivory-300 shadow-sm">
+          <div class="text-[10px] font-mono uppercase tracking-wider text-editorial-500 font-bold mb-2 px-1">Level 1 · Live Bay Occupancy</div>
+          
+          <div class="grid grid-cols-4 gap-2 py-1">
+            <!-- Slot 01 Booked -->
+            <div class="flex flex-col items-center p-1.5 rounded-xl bg-ivory-100 border border-ivory-200">
+              <span class="text-[9px] font-mono text-gray-400">01</span>
+              <div class="w-5 h-9 rounded bg-editorial-800 my-1 shadow-xs"></div>
+              <span class="text-[8px] text-red-500 font-bold">Booked</span>
+            </div>
+
+            <!-- Slot 02 Free -->
+            <div class="flex flex-col items-center p-1.5 rounded-xl bg-ivory-50 border border-dashed border-ivory-300">
+              <span class="text-[9px] font-mono text-gray-500">02</span>
+              <div class="w-5 h-9 rounded border border-gray-300 my-1"></div>
+              <span class="text-[8px] text-emerald-600 font-bold">Free</span>
+            </div>
+
+            <!-- Slot 11 SELECTED (Coral Orange Badge) -->
+            <div class="flex flex-col items-center p-1.5 rounded-xl bg-coral-50 border-2 border-coral-500 shadow-sm">
+              <span class="w-4 h-4 rounded-full bg-coral-500 text-white text-[9px] font-bold flex items-center justify-center font-mono">11</span>
+              <div class="w-5 h-9 rounded bg-white border border-coral-300 my-1 shadow-xs"></div>
+              <span class="text-[8px] text-coral-600 font-bold">Selected</span>
+            </div>
+
+            <!-- Slot 14 Booked -->
+            <div class="flex flex-col items-center p-1.5 rounded-xl bg-ivory-100 border border-ivory-200">
+              <span class="text-[9px] font-mono text-gray-400">14</span>
+              <div class="w-5 h-9 rounded bg-editorial-500 my-1 shadow-xs"></div>
+              <span class="text-[8px] text-red-500 font-bold">Booked</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Closing Time & Radial Dial Card -->
+        <div class="flex-1 mx-4 my-3 bg-white rounded-3xl p-4 border border-ivory-300 shadow-sm flex flex-col justify-between">
+          <div>
+            <!-- Header Row -->
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-1.5 text-xs font-bold text-editorial-800">
+                <svg class="w-3.5 h-3.5 text-coral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Closing Time
+              </div>
+              <button class="bg-coral-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-xs">
+                Park
+              </button>
+            </div>
+
+            <!-- Filter Pills -->
+            <div class="flex gap-1.5 mb-3">
+              <span class="bg-coral-500 text-white text-[10px] font-bold px-3 py-0.5 rounded-full">Today</span>
+              <span class="bg-ivory-100 text-editorial-600 text-[10px] font-medium px-3 py-0.5 rounded-full">Tomorrow</span>
+              <span class="bg-ivory-100 text-editorial-600 text-[10px] font-medium px-3 py-0.5 rounded-full">Later</span>
+            </div>
+          </div>
+
+          <!-- Radial Dial SVG -->
+          <div class="flex flex-col items-center justify-center my-auto">
+            <div class="relative w-40 h-24 flex items-center justify-center">
+              <svg class="w-40 h-24" viewBox="0 0 160 90">
+                <!-- Background gray arc -->
+                <path d="M 15 80 A 65 65 0 0 1 145 80" fill="none" stroke="#EAE6DE" stroke-width="12" stroke-linecap="round" />
+                <!-- Coral progress arc -->
+                <path d="M 45 30 A 65 65 0 0 1 145 80" fill="none" stroke="#EF5537" stroke-width="12" stroke-linecap="round" />
+                <!-- Particle dots -->
+                <circle cx="85" cy="45" r="2" fill="#EF5537" opacity="0.8" />
+                <circle cx="95" cy="52" r="3" fill="#EF5537" opacity="0.6" />
+                <circle cx="105" cy="42" r="2.5" fill="#EF5537" opacity="0.9" />
+                <circle cx="112" cy="58" r="2" fill="#EF5537" opacity="0.5" />
+              </svg>
+              <!-- Center Timer -->
+              <div class="absolute bottom-0 text-center">
+                <div class="text-xs text-gray-400">⌛</div>
+                <div class="text-base font-extrabold text-editorial-800 font-mono tracking-tight">04:25:10</div>
+              </div>
+            </div>
+            <div class="text-[10px] text-gray-500 mt-2 font-medium">Alert me 15 mins before</div>
+          </div>
+
+          <!-- Bottom Navigation mini line -->
+          <div class="w-24 h-1 bg-gray-300 rounded-full mx-auto"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: 3D Garage Guidance & Gate Key -->
+    <div class="flex flex-col items-center">
+      <div class="text-xs uppercase font-mono tracking-wider font-bold text-editorial-600 mb-2">Screen 3 · 3D Perspective &amp; Pass</div>
+      <div class="phone-mockup bg-gray-900 text-white">
+        <div class="phone-notch bg-gray-800"></div>
+
+        <!-- Status bar -->
+        <div class="pt-2 px-6 flex justify-between text-[11px] font-bold text-gray-300 z-40">
+          <span>9:41</span>
+          <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l.64-.64C7.93 20.26 9.88 21 12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
+            <span class="font-mono">78%</span>
+          </div>
+        </div>
+
+        <!-- Top Vehicle HUD Pill -->
+        <div class="px-5 pt-3 flex items-center justify-between z-30">
+          <button class="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white">
+            ‹
+          </button>
+          <div class="bg-white/15 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 flex items-center gap-2">
+            <div class="w-6 h-3 rounded bg-white shadow-xs"></div>
+            <div class="text-right">
+              <div class="text-[9px] text-gray-400">Your vehicle</div>
+              <div class="text-[11px] font-bold">BMW X6 · KA-05</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D Perspective Garage Simulation -->
+        <div class="relative flex-1 overflow-hidden flex flex-col justify-end">
+          <!-- Mini HUD Radar in top right -->
+          <div class="absolute top-4 right-4 w-16 h-16 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 p-1 flex items-center justify-center z-20">
+            <svg class="w-12 h-12 stroke-coral-500 fill-none" viewBox="0 0 40 40">
+              <path d="M 5 35 L 20 20 L 35 10" stroke-width="2" stroke-linecap="round" />
+              <circle cx="35" cy="10" r="3" fill="#EF5537" />
+            </svg>
+          </div>
+
+          <!-- Floating Bay Marker -->
+          <div class="absolute top-28 left-6 bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5 z-20">
+            <span class="w-5 h-5 rounded bg-white text-gray-900 font-bold text-[10px] flex items-center justify-center">P</span>
+            <span class="text-xs font-mono font-bold tracking-wider">H4 3425</span>
+          </div>
+
+          <!-- Perspective Floor Graphics -->
+          <div class="w-full h-72 perspective-grid flex flex-col items-center justify-end pb-8">
+            <!-- Zebra hazard lines -->
+            <div class="space-y-2 mb-4 w-48">
+              <div class="h-2 bg-white/90 rounded-sm"></div>
+              <div class="h-2 bg-white/90 rounded-sm"></div>
+              <div class="h-2 bg-white/90 rounded-sm"></div>
+              <div class="h-2 bg-white/90 rounded-sm"></div>
+              <div class="h-2 bg-white/90 rounded-sm"></div>
+            </div>
+
+            <!-- Orange Parking Bay Pad -->
+            <div class="w-56 h-32 bg-coral-500/90 rounded-2xl border-4 border-coral-400 flex items-center justify-center shadow-2xl">
+              <div class="text-3xl font-extrabold text-white tracking-widest font-mono">A-01</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Action CTA -->
+        <div class="p-5 bg-gray-900 z-30">
+          <button class="w-full bg-coral-500 hover:bg-coral-600 text-white font-bold py-3.5 px-4 rounded-2xl shadow-lg text-xs tracking-wide flex items-center justify-center gap-2">
+            <span>Route Your Parking Slot</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Product Adaptation Mapping Table -->
+  <section class="max-w-4xl mx-auto bg-white rounded-3xl p-6 md:p-8 border border-ivory-300 shadow-sm">
+    <h3 class="text-lg font-bold text-editorial-800 mb-4 flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-editorial-500"></span>
+      Mapping Design Spec to Agentic Parking System
+    </h3>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs text-left">
+        <thead class="text-editorial-600 uppercase font-mono border-b border-ivory-200">
+          <tr>
+            <th class="py-2.5 px-3">Visual Template Component</th>
+            <th class="py-2.5 px-3">Real Agentic Parking Feature</th>
+            <th class="py-2.5 px-3">Palette Role</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-ivory-200 text-editorial-800 font-medium">
+          <tr>
+            <td class="py-2.5 px-3 font-semibold">Coral Orange Floating Lot Card</td>
+            <td class="py-2.5 px-3">Auto-negotiated Deal Winner &amp; 180s Soft Lock with Indian Rupee integer paise</td>
+            <td class="py-2.5 px-3 font-mono text-coral-600">#EF5537</td>
+          </tr>
+          <tr>
+            <td class="py-2.5 px-3 font-semibold">Top-Down Architectural Bay Grid</td>
+            <td class="py-2.5 px-3">Live ESP32 IR Hardware Sensor Telemetry (A-01, B-01, C-01) with live toggle</td>
+            <td class="py-2.5 px-3 font-mono text-editorial-600">#226192 / #FAF8F5</td>
+          </tr>
+          <tr>
+            <td class="py-2.5 px-3 font-semibold">Radial Closing Time Dial</td>
+            <td class="py-2.5 px-3">180-second Reservation Hold countdown before slot lock expires</td>
+            <td class="py-2.5 px-3 font-mono text-coral-600">#EF5537 Arc + Dots</td>
+          </tr>
+          <tr>
+            <td class="py-2.5 px-3 font-semibold">3D Perspective Garage Guidance</td>
+            <td class="py-2.5 px-3">Cryptographic HMAC-SHA256 Gate Pass QR + Servo Gate Open Trigger</td>
+            <td class="py-2.5 px-3 font-mono text-editorial-800">#112E46 / #EF5537</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</body>
+</html>

@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { Header } from '../components/Header';
+import Svg, { Path, Circle, Rect, Line, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { colors, radii, shadows } from '../theme';
 import { WinnerData } from '../types';
 import { API_BASE } from '../hooks/useMobileNegotiation';
@@ -37,24 +37,25 @@ export const PassScreen: React.FC<PassScreenProps> = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [showQrModal, setShowQrModal] = useState<boolean>(false);
 
-  // Fallback demo winner if user views tab before completing a negotiation
+  // Fallback demo winner if user views tab before finishing negotiation
   const activeWinner: WinnerData = winner || {
-    lot_id: 'LOT_C',
-    name: 'Lot C (Metro Plaza)',
-    slot_id: 'C-01',
+    lot_id: 'LOT_A',
+    name: '37th Avenue Parking',
+    slot_id: 'A-01',
     agreed_rate_paise: 3500,
     agreed_rate_rupees: 35,
     total_paise: 10500,
     total_rupees: 105,
     usd_cents: 125,
     usd_display: '$1.25',
-    booking_id: 'bk_demo_2026',
+    booking_id: 'bk_live_3425',
   };
 
   const handlePayPalCheckout = async () => {
     setLoading(true);
-    setStatusMessage('Initiating PayPal Sandbox order...');
+    setStatusMessage('Connecting PayPal Sandbox...');
     try {
       const res = await fetch(`${API_BASE}/api/bookings/${activeWinner.booking_id}/checkout`, {
         method: 'POST',
@@ -62,14 +63,11 @@ export const PassScreen: React.FC<PassScreenProps> = ({
       const data = await res.json();
       if (data.approve_url) {
         Linking.openURL(data.approve_url);
-        setStatusMessage('Approved in Sandbox? Tap Confirm below.');
+        setStatusMessage('Approved in Sandbox? Confirm below.');
       } else {
-        setStatusMessage('Sandbox session ready. Confirming...');
         await onConfirmPayment(activeWinner.booking_id);
       }
-    } catch (e) {
-      // Local fallback simulator
-      setStatusMessage('Issuing cryptographic HMAC pass...');
+    } catch {
       await onConfirmPayment(activeWinner.booking_id);
     } finally {
       setLoading(false);
@@ -78,166 +76,242 @@ export const PassScreen: React.FC<PassScreenProps> = ({
 
   const handleConfirm = async () => {
     setLoading(true);
-    setStatusMessage('Acquiring HMAC-SHA256 signature...');
+    setStatusMessage('Generating HMAC-SHA256 token...');
     try {
       await onConfirmPayment(activeWinner.booking_id);
-      setStatusMessage('Access pass activated! Ready for gate entry.');
+      setStatusMessage('Access pass verified.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-      {/* Screen Header */}
-      <Header
-        title="Pass"
-        subtitleBold="Digital Wallet"
-        subtitleLight="PayPal &amp; physical gate key"
-        onPlusPress={onGoToHome}
-        onArrowPress={onGoToBidding}
-        statusBadge={gateState === 'OPEN' ? 'Gate OPEN' : 'Access Locked'}
-      />
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
+    >
+      {/* Top Controls Bar (Screen 3 style) */}
+      <View style={styles.topBar}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={onGoToHome}
+          style={styles.backBtn}
+        >
+          <Feather name="chevron-left" size={20} color="#FFFFFF" />
+        </TouchableOpacity>
 
-      {/* THE SIGNATURE STACKED CARDS UI (from image screen 3) */}
-      <View style={styles.cardStackWrapper}>
-        {/* Layer 1: Top Card (Light) */}
-        <View style={[styles.stackCardLayer1, shadows.card]}>
-          <Text style={styles.layer1Title}>{activeWinner.name}</Text>
-          <Text style={styles.layer1Sub}>Walking: 150m</Text>
-        </View>
-
-        {/* Layer 2: Middle Card (Soft Blue) */}
-        <View style={[styles.stackCardLayer2, shadows.card]}>
-          <Text style={styles.layer2Title}>Slot {activeWinner.slot_id} Reserved</Text>
-          <Text style={styles.layer2Sub}>Soft-lock: 180s active</Text>
-        </View>
-
-        {/* Layer 3: Main Active Cobalt Card */}
-        <View style={[styles.stackCardMain, shadows.cardStacked]}>
-          <View style={styles.mainCardTopRow}>
-            <View>
-              <Text style={styles.mainCardLabel}>AGREED RATE</Text>
-              <Text style={styles.mainCardPrice}>₹{activeWinner.agreed_rate_rupees}<Text style={styles.mainCardUnit}>/hr</Text></Text>
-            </View>
-            <View style={styles.mainCardBadge}>
-              <Feather name="check" size={14} color="#FFFFFF" />
-              <Text style={styles.mainCardBadgeText}>CONFIRMED</Text>
-            </View>
+        {/* Floating Vehicle Info Pill */}
+        <View style={styles.vehiclePill}>
+          <View style={styles.vehicleIcon}>
+            <Feather name="truck" size={13} color="#FFFFFF" />
           </View>
-
-          <View style={styles.mainCardDivider} />
-
-          <View style={styles.mainCardBottomRow}>
-            <View>
-              <Text style={styles.mainCardSettlement}>Total: ₹{activeWinner.total_rupees} ({activeWinner.usd_display} USD)</Text>
-              <Text style={styles.mainCardPassId}>Digital Pass •••••••• {activeWinner.booking_id.slice(-4)}</Text>
-            </View>
-            <View style={styles.chipIcon}>
-              <Feather name="shield" size={20} color="#FFFFFF" />
-            </View>
+          <View style={styles.vehicleTextWrap}>
+            <Text style={styles.vehicleLabel}>Your vehicle</Text>
+            <Text style={styles.vehicleModel}>BMW X6 · KA-05</Text>
           </View>
         </View>
       </View>
 
-      {/* Action Modules */}
-      <View style={styles.actionsContainer}>
-        {/* Step 1: PayPal Checkout */}
-        {!qrToken ? (
-          <View style={[styles.actionCard, shadows.card]}>
-            <View style={styles.actionCardHeader}>
-              <View style={styles.actionIconPill}>
-                <Feather name="credit-card" size={16} color={colors.primary} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.actionCardTitle}>Zero-LLM PayPal Settlement</Text>
-                <Text style={styles.actionCardSub}>Calculated in Python paise to USD cents ($1.25)</Text>
-              </View>
-            </View>
-
-            {loading ? (
-              <ActivityIndicator color={colors.primary} style={{ marginVertical: 14 }} />
-            ) : (
-              <View style={styles.buttonStack}>
-                <TouchableOpacity
-                  activeOpacity={0.85}
-                  onPress={handlePayPalCheckout}
-                  style={[styles.payPalButton, shadows.button]}
-                >
-                  <Text style={styles.payPalButtonText}>Approve via PayPal Sandbox</Text>
-                  <Feather name="external-link" size={14} color="#FFFFFF" />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  activeOpacity={0.85}
-                  onPress={handleConfirm}
-                  style={styles.confirmButton}
-                >
-                  <Text style={styles.confirmButtonText}>Confirm &amp; Issue Signed Pass</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {statusMessage && <Text style={styles.statusFeedback}>{statusMessage}</Text>}
+      {/* 3D Underground Garage Perspective Ambiance Card */}
+      <View style={[styles.garageCard, shadows.card]}>
+        {/* Floating Bay Marker Pill hovering in 3D space */}
+        <View style={styles.bayFloatingMarker}>
+          <View style={styles.markerBadge}>
+            <Text style={styles.markerBadgeText}>P</Text>
           </View>
-        ) : (
-          /* Step 2: Cryptographic QR Access Key & Gate Trigger */
-          <View style={[styles.actionCard, shadows.card]}>
-            <View style={styles.qrHeader}>
-              <View style={styles.qrBadge}>
-                <Feather name="lock" size={12} color={colors.success} />
-                <Text style={styles.qrBadgeText}>HMAC-SHA256 SIGNED</Text>
-              </View>
-              <Text style={styles.qrBookingId}>Slot {activeWinner.slot_id}</Text>
-            </View>
+          <Text style={styles.markerSlotText}>H4 {activeWinner.slot_id} · 3425</Text>
+        </View>
 
-            {/* Visual QR Representation */}
-            <View style={styles.qrMockContainer}>
-              <View style={styles.qrSquare}>
-                <Feather name="maximize" size={54} color={colors.primary} />
-                <Text style={styles.qrLabelText}>VALID PASS</Text>
-              </View>
-              <Text style={styles.tokenMonoText} numberOfLines={1}>
-                {qrToken}
-              </Text>
-            </View>
+        {/* Mini HUD Radar Widget on top right */}
+        <View style={styles.miniRadarWidget}>
+          <Svg width={46} height={46} viewBox="0 0 46 46">
+            <Path
+              d="M 8 38 L 22 22 L 36 12"
+              fill="none"
+              stroke={colors.coralOrange}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+            <Circle cx="36" cy="12" r="3.5" fill={colors.coralOrange} />
+            <Circle cx="8" cy="38" r="3" fill="#FFFFFF" />
+          </Svg>
+        </View>
 
-            {/* Actuate Physical/Twin Barrier Gate */}
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={onActuateGate}
-              style={[
-                styles.gateButton,
-                gateState === 'OPEN' ? styles.gateButtonOpen : styles.gateButtonClosed,
-                shadows.button,
-              ]}
-            >
-              <Feather
-                name={gateState === 'OPEN' ? 'unlock' : 'key'}
-                size={18}
-                color={gateState === 'OPEN' ? colors.success : '#FFFFFF'}
-              />
-              <Text
-                style={[
-                  styles.gateButtonText,
-                  gateState === 'OPEN' ? styles.gateButtonTextOpen : styles.gateButtonTextClosed,
-                ]}
-              >
-                {gateState === 'OPEN'
-                  ? `BARRIER OPEN (${gateCountdown}s auto-close)`
-                  : 'Present to Security Gate Barrier'}
-              </Text>
-            </TouchableOpacity>
+        {/* Vertical HUD Action Column */}
+        <View style={styles.hudActionsColumn}>
+          <View style={styles.hudIconBtn}>
+            <Feather name="corner-up-left" size={14} color="#FFFFFF" />
+          </View>
+          <View style={styles.hudIconBtn}>
+            <Feather name="crosshair" size={14} color="#FFFFFF" />
+          </View>
+          <View style={styles.hudIconBtn}>
+            <Feather name="map" size={14} color="#FFFFFF" />
+          </View>
+        </View>
+
+        {/* 3D Perspective Garage Floor SVG Simulation */}
+        <Svg width="100%" height={260} viewBox="0 0 340 260">
+          <Defs>
+            <LinearGradient id="garageFloor" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0%" stopColor="#1E293B" stopOpacity="0.4" />
+              <Stop offset="100%" stopColor="#0B1321" stopOpacity="0.95" />
+            </LinearGradient>
+            <LinearGradient id="coralBay" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0%" stopColor="#EF5537" stopOpacity="0.95" />
+              <Stop offset="100%" stopColor="#D94528" stopOpacity="0.9" />
+            </LinearGradient>
+          </Defs>
+
+          {/* Perspective Floor Plane */}
+          <Path
+            d="M 0 100 L 340 100 L 340 260 L 0 260 Z"
+            fill="url(#garageFloor)"
+          />
+
+          {/* Perspective Lane Guidelines */}
+          <Line x1="100" y1="100" x2="20" y2="260" stroke="#334155" strokeWidth="1.5" />
+          <Line x1="240" y1="100" x2="320" y2="260" stroke="#334155" strokeWidth="1.5" />
+
+          {/* Floor Zebra Crossing / Hazard Stripes leading to bay */}
+          <Path d="M 85 140 L 155 140" stroke="#FFFFFF" strokeWidth="5" strokeLinecap="round" opacity={0.85} />
+          <Path d="M 80 155 L 160 155" stroke="#FFFFFF" strokeWidth="5.5" strokeLinecap="round" opacity={0.85} />
+          <Path d="M 75 172 L 165 172" stroke="#FFFFFF" strokeWidth="6" strokeLinecap="round" opacity={0.85} />
+          <Path d="M 70 190 L 170 190" stroke="#FFFFFF" strokeWidth="6.5" strokeLinecap="round" opacity={0.85} />
+          <Path d="M 65 210 L 175 210" stroke="#FFFFFF" strokeWidth="7" strokeLinecap="round" opacity={0.85} />
+
+          {/* Perspective Coral Orange Parking Bay Surface */}
+          <Path
+            d="M 175 125 L 305 125 L 325 245 L 180 245 Z"
+            fill="url(#coralBay)"
+            stroke="#F26C52"
+            strokeWidth="2"
+          />
+
+          {/* Bay Slot ID Text Painted on Floor */}
+          <Path
+            d="M 230 195 L 260 195"
+            stroke="#FFFFFF"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+        </Svg>
+      </View>
+
+      {/* Booking Details & Gate Actuation Controls */}
+      <View style={[styles.dealSummaryCard, shadows.card]}>
+        <View style={styles.dealHeaderRow}>
+          <View>
+            <Text style={styles.dealLotName}>{activeWinner.name}</Text>
+            <Text style={styles.dealSlotDetail}>
+              Assigned Bay: <Text style={{ fontWeight: '800', color: colors.editorialDark }}>{activeWinner.slot_id}</Text>
+            </Text>
+          </View>
+          <View style={styles.rateBadge}>
+            <Text style={styles.rateRupees}>₹{activeWinner.agreed_rate_rupees}/hr</Text>
+            <Text style={styles.rateUsd}>({activeWinner.usd_display})</Text>
+          </View>
+        </View>
+
+        {/* Gate State & Hardware Sensor Pill */}
+        <View style={styles.gateStatusBanner}>
+          <View style={styles.gateStatusLeft}>
+            <Feather
+              name={gateState === 'OPEN' ? 'unlock' : 'lock'}
+              size={15}
+              color={gateState === 'OPEN' ? colors.success : colors.danger}
+            />
+            <Text style={styles.gateStatusLabel}>
+              Physical Vision Gate: <Text style={{ fontWeight: '800' }}>{gateState}</Text>
+            </Text>
+          </View>
+          {gateState === 'OPEN' && (
+            <Text style={styles.countdownPill}>{gateCountdown}s Auto-Close</Text>
+          )}
+        </View>
+
+        {/* Action Buttons */}
+        <View style={styles.buttonStack}>
+          {/* Servo Gate Actuator */}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={onActuateGate}
+            style={[styles.actuateBtn, gateState === 'OPEN' ? styles.actuateBtnOpen : styles.actuateBtnClosed]}
+          >
+            <Feather name={gateState === 'OPEN' ? 'check' : 'cpu'} size={15} color="#FFFFFF" />
+            <Text style={styles.actuateBtnText}>
+              {gateState === 'OPEN' ? 'Gate OPEN (Auto-closing)' : 'Actuate Physical Gate (ESP32 Servo)'}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Cryptographic HMAC QR Key Button */}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => setShowQrModal(!showQrModal)}
+            style={styles.qrToggleBtn}
+          >
+            <Feather name="maximize" size={14} color={colors.editorialDark} />
+            <Text style={styles.qrToggleBtnText}>
+              {showQrModal ? 'Hide Digital HMAC Pass' : 'Show HMAC-SHA256 Gate Pass QR'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Interactive QR Pass Display */}
+        {showQrModal && (
+          <View style={styles.qrContainer}>
+            <View style={styles.qrBox}>
+              {/* Geometric QR Simulation */}
+              <Svg width={140} height={140} viewBox="0 0 140 140">
+                <Rect x="0" y="0" width="140" height="140" fill="#FFFFFF" />
+                {/* QR corner finders */}
+                <Rect x="10" y="10" width="36" height="36" rx="4" fill={colors.editorialDark} />
+                <Rect x="16" y="16" width="24" height="24" rx="2" fill="#FFFFFF" />
+                <Rect x="22" y="22" width="12" height="12" fill={colors.editorialDark} />
+
+                <Rect x="94" y="10" width="36" height="36" rx="4" fill={colors.editorialDark} />
+                <Rect x="100" y="16" width="24" height="24" rx="2" fill="#FFFFFF" />
+                <Rect x="106" y="22" width="12" height="12" fill={colors.editorialDark} />
+
+                <Rect x="10" y="94" width="36" height="36" rx="4" fill={colors.editorialDark} />
+                <Rect x="16" y="100" width="24" height="24" rx="2" fill="#FFFFFF" />
+                <Rect x="22" y="106" width="12" height="12" fill={colors.editorialDark} />
+
+                {/* Pattern dots */}
+                <Rect x="56" y="16" width="10" height="10" fill={colors.editorialDark} />
+                <Rect x="74" y="24" width="10" height="10" fill={colors.coralOrange} />
+                <Rect x="56" y="56" width="28" height="28" rx="4" fill={colors.editorialDark} />
+                <Rect x="94" y="56" width="10" height="10" fill={colors.editorialDark} />
+                <Rect x="112" y="74" width="10" height="10" fill={colors.editorialDark} />
+                <Rect x="56" y="94" width="10" height="10" fill={colors.coralOrange} />
+                <Rect x="74" y="112" width="10" height="10" fill={colors.editorialDark} />
+              </Svg>
+            </View>
+            <Text style={styles.qrNotice}>
+              Scan at Entrance Webcam · HMAC Token Signed
+            </Text>
           </View>
         )}
+      </View>
 
-        {/* Twin Feedback */}
-        <View style={styles.twinPill}>
-          <Feather name="cpu" size={13} color={colors.textSecondary} />
-          <Text style={styles.twinPillText}>
-            Physical ESP32 Twin: SG90 Servo Barrier &amp; IR Sensors Synced
-          </Text>
-        </View>
+      {/* Screen 3 Bottom Full-Width CTA */}
+      <View style={styles.bottomCtaWrap}>
+        <TouchableOpacity
+          activeOpacity={0.88}
+          onPress={handlePayPalCheckout}
+          disabled={loading}
+          style={[styles.routeParkingBtn, shadows.coralButton]}
+        >
+          {loading ? (
+            <ActivityIndicator color="#FFFFFF" size="small" />
+          ) : (
+            <>
+              <Text style={styles.routeParkingBtnText}>Route Your Parking Slot</Text>
+              <Feather name="arrow-right" size={16} color="#FFFFFF" />
+            </>
+          )}
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -246,308 +320,286 @@ export const PassScreen: React.FC<PassScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: '#0F172A', // Dark ambiance matching screen 3
   },
   contentContainer: {
-    paddingBottom: 24,
+    paddingBottom: 28,
   },
-  cardStackWrapper: {
-    marginHorizontal: 18,
-    marginTop: 10,
-    marginBottom: 20,
-    height: 250,
-    position: 'relative',
+  topBar: {
+    flexDirection: 'row',
     alignItems: 'center',
-  },
-  stackCardLayer1: {
-    position: 'absolute',
-    top: 0,
-    width: '88%',
-    height: 120,
-    backgroundColor: '#FFFFFF',
-    borderRadius: radii.card,
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingTop: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderWidth: 1,
-    borderColor: colors.borderLight,
+    paddingBottom: 10,
   },
-  layer1Title: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
-  layer1Sub: {
-    fontSize: 11,
-    color: colors.textMuted,
-  },
-  stackCardLayer2: {
-    position: 'absolute',
-    top: 26,
-    width: '93%',
-    height: 130,
-    backgroundColor: '#93C5FD',
-    borderRadius: radii.card,
-    paddingHorizontal: 20,
-    paddingTop: 14,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  layer2Title: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: '#1E3A8A',
-  },
-  layer2Sub: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#2563EB',
-  },
-  stackCardMain: {
-    position: 'absolute',
-    top: 54,
-    width: '100%',
-    height: 180,
-    backgroundColor: colors.primary,
-    borderRadius: radii.card,
-    padding: 22,
-    justifyContent: 'space-between',
-  },
-  mainCardTopRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  mainCardLabel: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: 'rgba(255,255,255,0.7)',
-    letterSpacing: 0.5,
-  },
-  mainCardPrice: {
-    fontSize: 34,
-    fontWeight: '900',
-    color: '#FFFFFF',
-    letterSpacing: -0.8,
-  },
-  mainCardUnit: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: 'rgba(255,255,255,0.8)',
-  },
-  mainCardBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: radii.pill,
-  },
-  mainCardBadgeText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    letterSpacing: 0.5,
-  },
-  mainCardDivider: {
-    height: 1,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    marginVertical: 4,
-  },
-  mainCardBottomRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  mainCardSettlement: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 2,
-  },
-  mainCardPassId: {
-    fontSize: 11,
-    fontFamily: 'monospace',
-    color: 'rgba(255,255,255,0.7)',
-  },
-  chipIcon: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  actionsContainer: {
-    paddingHorizontal: 18,
-    gap: 12,
-  },
-  actionCard: {
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    padding: 18,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-  },
-  actionCardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginBottom: 16,
-  },
-  actionIconPill: {
+  backBtn: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: colors.primaryLight,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  actionCardTitle: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: colors.textPrimary,
+  vehiclePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    gap: 8,
   },
-  actionCardSub: {
+  vehicleIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: colors.editorialBlue,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  vehicleTextWrap: {
+    alignItems: 'flex-start',
+  },
+  vehicleLabel: {
+    fontSize: 9,
+    color: '#94A3B8',
+    fontWeight: '500',
+  },
+  vehicleModel: {
     fontSize: 11,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+
+  // 3D Garage Card
+  garageCard: {
+    backgroundColor: '#0B1321',
+    borderRadius: radii.card,
+    marginHorizontal: 18,
+    overflow: 'hidden',
+    position: 'relative',
+    borderWidth: 1,
+    borderColor: '#1E293B',
+    marginBottom: 14,
+  },
+  bayFloatingMarker: {
+    position: 'absolute',
+    top: 24,
+    left: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    gap: 6,
+    zIndex: 10,
+  },
+  markerBadge: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  markerBadgeText: {
+    fontSize: 10,
+    fontWeight: '900',
+    color: colors.editorialDark,
+  },
+  markerSlotText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    fontFamily: 'monospace',
+  },
+  miniRadarWidget: {
+    position: 'absolute',
+    top: 18,
+    right: 18,
+    width: 52,
+    height: 52,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  hudActionsColumn: {
+    position: 'absolute',
+    top: 80,
+    right: 18,
+    flexDirection: 'column',
+    gap: 8,
+    zIndex: 10,
+  },
+  hudIconBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  // Deal Summary Card
+  dealSummaryCard: {
+    backgroundColor: '#FAF8F5',
+    borderRadius: radii.card,
+    marginHorizontal: 18,
+    padding: 18,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    marginBottom: 14,
+  },
+  dealHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  dealLotName: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: colors.editorialDark,
+  },
+  dealSlotDetail: {
+    fontSize: 12,
     color: colors.textSecondary,
     marginTop: 2,
   },
-  buttonStack: {
-    gap: 10,
+  rateBadge: {
+    alignItems: 'flex-end',
   },
-  payPalButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    backgroundColor: '#0070BA',
-    borderRadius: radii.button,
-    paddingVertical: 14,
+  rateRupees: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: colors.editorialDark,
   },
-  payPalButtonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '800',
-  },
-  confirmButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surfaceSubtle,
-    borderRadius: radii.button,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  confirmButtonText: {
-    color: colors.textPrimary,
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  statusFeedback: {
-    fontSize: 12,
-    color: colors.primary,
+  rateUsd: {
+    fontSize: 11,
     fontWeight: '600',
-    textAlign: 'center',
-    marginTop: 10,
+    color: colors.textSecondary,
   },
-  qrHeader: {
+  gateStatusBanner: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 14,
+    backgroundColor: '#FFFFFF',
+    borderRadius: radii.cardSmall,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: 12,
   },
-  qrBadge: {
+  gateStatusLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    backgroundColor: colors.successLight,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: radii.pill,
+    gap: 6,
   },
-  qrBadgeText: {
+  gateStatusLabel: {
+    fontSize: 11,
+    color: colors.editorialDark,
+  },
+  countdownPill: {
     fontSize: 10,
     fontWeight: '800',
     color: colors.success,
+    backgroundColor: colors.successLight,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: radii.pill,
   },
-  qrBookingId: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: colors.textPrimary,
+  buttonStack: {
+    gap: 8,
   },
-  qrMockContainer: {
-    alignItems: 'center',
-    paddingVertical: 14,
-  },
-  qrSquare: {
-    width: 130,
-    height: 130,
-    backgroundColor: colors.surfaceSubtle,
-    borderRadius: 18,
-    borderWidth: 2,
-    borderColor: colors.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  qrLabelText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: colors.primary,
-    marginTop: 6,
-    letterSpacing: 0.5,
-  },
-  tokenMonoText: {
-    fontSize: 10,
-    fontFamily: 'monospace',
-    color: colors.textMuted,
-    maxWidth: '90%',
-  },
-  gateButton: {
+  actuateBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
+    paddingVertical: 12,
     borderRadius: radii.button,
-    paddingVertical: 14,
-    marginTop: 6,
   },
-  gateButtonClosed: {
-    backgroundColor: colors.blackPure,
+  actuateBtnClosed: {
+    backgroundColor: colors.editorialDark,
   },
-  gateButtonOpen: {
-    backgroundColor: colors.successLight,
-    borderWidth: 1.5,
-    borderColor: colors.success,
+  actuateBtnOpen: {
+    backgroundColor: colors.success,
   },
-  gateButtonText: {
-    fontSize: 14,
+  actuateBtnText: {
+    color: '#FFFFFF',
+    fontSize: 12,
     fontWeight: '800',
   },
-  gateButtonTextClosed: {
-    color: '#FFFFFF',
-  },
-  gateButtonTextOpen: {
-    color: colors.success,
-  },
-  twinPill: {
+  qrToggleBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    backgroundColor: colors.surface,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: colors.border,
     paddingVertical: 10,
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-    marginTop: 4,
+    borderRadius: radii.button,
   },
-  twinPillText: {
+  qrToggleBtnText: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '700',
+    color: colors.editorialDark,
+  },
+  qrContainer: {
+    alignItems: 'center',
+    marginTop: 14,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  qrBox: {
+    padding: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    shadowColor: colors.editorialDark,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+  },
+  qrNotice: {
+    fontSize: 10,
     color: colors.textSecondary,
+    fontWeight: '600',
+    marginTop: 8,
+  },
+
+  // Screen 3 Bottom Full-Width CTA
+  bottomCtaWrap: {
+    paddingHorizontal: 18,
+  },
+  routeParkingBtn: {
+    backgroundColor: colors.coralOrange,
+    paddingVertical: 16,
+    borderRadius: radii.button,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  routeParkingBtnText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 0.2,
   },
 });

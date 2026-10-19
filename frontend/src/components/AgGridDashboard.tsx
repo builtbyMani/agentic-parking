@@ -39,40 +39,43 @@ export const AgGridDashboard: React.FC<AgGridDashboardProps> = ({
       {
         field: 'slot_id',
         headerName: 'Slot',
-        width: 100,
+        width: 95,
         pinned: 'left',
         cellRenderer: (params: any) => (
-          <span className="font-mono font-bold text-white">{params.value}</span>
+          <span className="font-mono font-extrabold text-editorial-800">{params.value}</span>
         ),
       },
       {
         field: 'lot_name',
         headerName: 'Lot Name',
         flex: 1,
-        minWidth: 150,
+        minWidth: 140,
+        cellRenderer: (params: any) => (
+          <span className="font-semibold text-editorial-800">{params.value}</span>
+        ),
       },
       {
         field: 'distance_m',
         headerName: 'Distance',
-        width: 105,
+        width: 100,
         valueFormatter: (params) => `${params.value}m`,
       },
       {
         field: 'list_rate',
         headerName: 'List Rate',
-        width: 105,
+        width: 95,
         valueFormatter: (params) => `₹${params.value}/hr`,
       },
       {
         field: 'floor_rate',
-        headerName: 'Floor Limit',
-        width: 110,
+        headerName: 'Floor',
+        width: 90,
         valueFormatter: (params) => `₹${params.value}/hr`,
       },
       {
         field: 'sensor_occupied',
         headerName: 'IR Sensor',
-        width: 130,
+        width: 125,
         enableCellChangeFlash: true,
         cellRenderer: (params: any) => {
           const isOcc = !!params.value;
@@ -84,10 +87,10 @@ export const AgGridDashboard: React.FC<AgGridDashboardProps> = ({
                 }`}
               />
               <span
-                className={`text-xs px-2 py-0.5 rounded font-bold ${
+                className={`text-xs px-2 py-0.5 rounded-full font-bold ${
                   isOcc
-                    ? 'bg-rose-950 text-rose-300 border border-rose-800'
-                    : 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                    ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                    : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                 }`}
               >
                 {isOcc ? 'Occupied' : 'Vacant'}
@@ -99,19 +102,19 @@ export const AgGridDashboard: React.FC<AgGridDashboardProps> = ({
       {
         field: 'booking_status',
         headerName: 'Reservation',
-        width: 135,
+        width: 130,
         enableCellChangeFlash: true,
         cellRenderer: (params: any) => {
           const val = params.value;
-          let badgeColor = 'bg-slate-800 text-slate-300 border-slate-700';
+          let badgeColor = 'bg-white text-editorial-600 border-[#DFD9CE]';
           if (val === 'SOFT_LOCK') {
-            badgeColor = 'bg-amber-950 text-amber-300 border-amber-700 animate-pulse';
+            badgeColor = 'bg-amber-50 text-amber-700 border-amber-300 animate-pulse font-bold';
           } else if (val === 'CONFIRMED') {
-            badgeColor = 'bg-sky-950 text-sky-300 border-sky-700';
+            badgeColor = 'bg-coral-50 text-coral-600 border-coral-200 font-extrabold';
           }
           return (
             <div className="flex items-center h-full">
-              <span className={`text-xs px-2 py-0.5 rounded border font-mono font-semibold ${badgeColor}`}>
+              <span className={`text-xs px-2 py-0.5 rounded-full border font-mono ${badgeColor}`}>
                 {val}
               </span>
             </div>
@@ -120,11 +123,11 @@ export const AgGridDashboard: React.FC<AgGridDashboardProps> = ({
       },
       {
         headerName: 'Twin Sim',
-        width: 115,
+        width: 105,
         cellRenderer: (params: any) => (
           <button
             onClick={() => onToggleSensor(params.data.slot_id, params.data.sensor_occupied)}
-            className="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2 py-1 rounded transition active:scale-95"
+            className="text-[10px] font-bold bg-white hover:bg-ivory-100 text-editorial-800 border border-[#DFD9CE] px-2 py-1 rounded-lg transition active:scale-95 shadow-xs"
             title="Simulate hardware IR sensor trip"
           >
             Toggle IR
@@ -136,23 +139,23 @@ export const AgGridDashboard: React.FC<AgGridDashboardProps> = ({
   );
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-2xl flex flex-col h-[340px]">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+    <div className="bg-[#FAF8F5] border border-[#DFD9CE] rounded-3xl p-5 shadow-sm flex flex-col h-[340px]">
+      <div className="flex items-center justify-between pb-3 border-b border-[#DFD9CE] mb-3">
         <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4 text-emerald-400" />
-          <h3 className="text-sm font-bold text-white tracking-wide">Live Inventory (AG Grid Community)</h3>
+          <Activity className="w-4 h-4 text-editorial-500" />
+          <h3 className="text-sm font-extrabold text-editorial-800 tracking-tight">Live Inventory (AG Grid)</h3>
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-400">
+        <div className="flex items-center gap-2 text-xs text-editorial-600">
           <Radio
             className={`w-3.5 h-3.5 ${
-              rowData.length > 0 ? 'text-emerald-400 animate-pulse' : 'text-slate-500'
+              rowData.length > 0 ? 'text-coral-500 animate-pulse' : 'text-editorial-400'
             }`}
           />
-          <span>{rowData.length > 0 ? 'enableCellChangeFlash Active' : 'Waiting for Twin Telemetry...'}</span>
+          <span className="font-medium">{rowData.length > 0 ? 'enableCellChangeFlash Active' : 'Waiting for Twin Telemetry...'}</span>
         </div>
       </div>
 
-      <div className="flex-1 w-full ag-theme-quartz-dark text-xs">
+      <div className="flex-1 w-full ag-theme-quartz text-xs rounded-xl overflow-hidden border border-[#DFD9CE]">
         <AgGridReact
           rowData={rowData}
           columnDefs={columnDefs}
@@ -164,7 +167,7 @@ export const AgGridDashboard: React.FC<AgGridDashboardProps> = ({
           suppressCellFocus={true}
           animateRows={true}
           overlayNoRowsTemplate={
-            '<span class="text-slate-400 text-xs">No slots found. Connect gateway or trigger an offline replay.</span>'
+            '<span class="text-editorial-600 text-xs font-medium">No slots found. Connect gateway or trigger an offline replay.</span>'
           }
         />
       </div>

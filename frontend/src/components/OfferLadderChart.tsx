@@ -48,38 +48,39 @@ export const OfferLadderChart: React.FC<OfferLadderChartProps> = ({ events }) =>
   }, [events]);
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-2xl flex flex-col h-[340px]">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-2">
+    <div className="bg-[#FAF8F5] border border-[#DFD9CE] rounded-3xl p-5 shadow-sm flex flex-col h-[340px]">
+      <div className="flex items-center justify-between pb-3 border-b border-[#DFD9CE] mb-2">
         <div className="flex items-center gap-2">
-          <TrendingDown className="w-4 h-4 text-sky-400" />
-          <h3 className="text-sm font-bold text-white tracking-wide">Offer Ladder (Price Convergence)</h3>
+          <TrendingDown className="w-4 h-4 text-editorial-500" />
+          <h3 className="text-sm font-extrabold text-editorial-800 tracking-tight">Offer Ladder (Price Convergence)</h3>
         </div>
-        <span className="text-xs text-slate-400 font-mono">Rates in ₹/hr</span>
+        <span className="text-xs text-editorial-600 font-mono font-medium">Rates in ₹/hr</span>
       </div>
 
       <div className="flex-1 w-full min-h-0">
         {chartData.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-slate-500 text-xs">
+          <div className="h-full flex items-center justify-center text-editorial-600 text-xs font-medium">
             Awaiting negotiation rounds to plot trajectory...
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 15, right: 25, left: -10, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-              <XAxis dataKey="round" stroke="#64748b" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#DFD9CE" />
+              <XAxis dataKey="round" stroke="#8696A4" tick={{ fill: '#4A5E70', fontSize: 11, fontWeight: 600 }} />
               <YAxis
                 domain={['auto', 'auto']}
-                stroke="#64748b"
-                tick={{ fill: '#94a3b8', fontSize: 11 }}
+                stroke="#8696A4"
+                tick={{ fill: '#4A5E70', fontSize: 11, fontWeight: 600 }}
                 tickFormatter={(val) => `₹${val}`}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#0f172a',
-                  borderColor: '#334155',
-                  borderRadius: '8px',
-                  color: '#f8fafc',
+                  backgroundColor: '#FFFFFF',
+                  borderColor: '#DFD9CE',
+                  borderRadius: '12px',
+                  color: '#112E46',
                   fontSize: '12px',
+                  boxShadow: '0 4px 12px rgba(17, 46, 70, 0.08)',
                 }}
                 formatter={(value: any) => [`₹${value}/hr`]}
               />
@@ -88,9 +89,9 @@ export const OfferLadderChart: React.FC<OfferLadderChartProps> = ({ events }) =>
                 type="monotone"
                 dataKey="driver"
                 name="Driver Bid"
-                stroke="#38bdf8"
+                stroke="#EF5537"
                 strokeWidth={3}
-                dot={{ r: 4, fill: '#38bdf8' }}
+                dot={{ r: 4, fill: '#EF5537' }}
                 activeDot={{ r: 6 }}
                 connectNulls
               />
@@ -98,27 +99,27 @@ export const OfferLadderChart: React.FC<OfferLadderChartProps> = ({ events }) =>
                 type="monotone"
                 dataKey="LOT_A"
                 name="Lot A"
-                stroke="#10b981"
+                stroke="#226192"
                 strokeWidth={2}
-                dot={{ r: 4, fill: '#10b981' }}
+                dot={{ r: 4, fill: '#226192' }}
                 connectNulls
               />
               <Line
                 type="monotone"
                 dataKey="LOT_B"
                 name="Lot B"
-                stroke="#a855f7"
+                stroke="#112E46"
                 strokeWidth={2}
-                dot={{ r: 4, fill: '#a855f7' }}
+                dot={{ r: 4, fill: '#112E46' }}
                 connectNulls
               />
               <Line
                 type="monotone"
                 dataKey="LOT_C"
                 name="Lot C"
-                stroke="#f59e0b"
+                stroke="#4A7C9F"
                 strokeWidth={2}
-                dot={{ r: 4, fill: '#f59e0b' }}
+                dot={{ r: 4, fill: '#4A7C9F' }}
                 connectNulls
               />
             </LineChart>

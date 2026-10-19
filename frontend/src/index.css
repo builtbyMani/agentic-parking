@@ -3,36 +3,58 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
   body {
-    @apply bg-slate-950 text-slate-100 font-sans antialiased;
+    @apply bg-[#EAE6DE] text-editorial-800 font-sans;
   }
 }
 
-/* Custom Scrollbar for dark theme */
+@layer utilities {
+  /* Editorial text stroke for stacked typography */
+  .text-stroke-editorial {
+    -webkit-text-stroke: 2px #112E46;
+    color: transparent;
+  }
+  .text-stroke-editorial-sm {
+    -webkit-text-stroke: 1.2px #112E46;
+    color: transparent;
+  }
+  .text-stroke-coral {
+    -webkit-text-stroke: 1.5px #EF5537;
+    color: transparent;
+  }
+}
+
+/* Custom Scrollbar for warm ivory theme */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #EAE6DE;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #C7BFB1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #8696A4;
 }
 
-/* AG Grid Dark Theme Quartz adjustments */
-.ag-theme-quartz-dark {
-  --ag-background-color: #0b1120;
-  --ag-header-background-color: #0f172a;
-  --ag-odd-row-background-color: #0d1527;
-  --ag-border-color: #1e293b;
-  --ag-row-hover-color: #1e293b80;
-  --ag-data-color: #f1f5f9;
-  --ag-header-foreground-color: #94a3b8;
-  --ag-font-family: inherit;
-  --ag-font-size: 12px;
+/* AG Grid Editorial Theme Quartz adjustments */
+.ag-theme-quartz, .ag-theme-quartz-dark {
+  --ag-background-color: #FAF8F5;
+  --ag-header-background-color: #F0ECE4;
+  --ag-odd-row-background-color: #FFFFFF;
+  --ag-border-color: #DFD9CE;
+  --ag-row-hover-color: #EAF3FA;
+  --ag-data-color: #112E46;
+  --ag-header-foreground-color: #226192;
+  --ag-font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Helvetica Neue", sans-serif;
+  --ag-font-size: 11px;
 }
